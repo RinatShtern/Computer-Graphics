@@ -1,12 +1,10 @@
 //Rinat Shteren 206642159v rishtere@g.jct.ac.il
 //Hila Shahar Haik 318694403 hilashah@g.jct.ac.il
-package test;
+package primitives;
 
 import static java.lang.System.out;
 
 import static primitives.Util.isZero;
-
-import primitives.*;
 
 /**
  * Test program for the 1st stage

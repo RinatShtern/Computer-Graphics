@@ -1,5 +1,7 @@
 package primitives;
 
+import static primitives.Util.isZero;
+
 /**
  * Represents a vector in the 3D space.
  * A vector is defined by its components (x, y, z) and can be used to represent direction and magnitude.
@@ -14,11 +16,8 @@ public class Vector extends Point {
      * @param z the z-component of the vector
      * @throws IllegalArgumentException if the vector has zero length
      */
-    public Vector(double x, double y, double z) throws IllegalArgumentException {
-        super(x, y, z);
-        if (xyz.equals(Double3.ZERO)) {
-            throw new IllegalArgumentException("Can't create zero vector!");
-        }
+    public Vector(double x, double y, double z){
+        this(new Double3(x,y,z));
     }
 
     /**
@@ -51,6 +50,9 @@ public class Vector extends Point {
      * @return a new vector resulting from scaling this vector by the given scalar
      */
     public Vector scale(double scalar) {
+        if(isZero(scalar))
+            throw new IllegalArgumentException("A vector cannot be scaled by()");
+
         return new Vector(xyz.scale(scalar));
     }
 

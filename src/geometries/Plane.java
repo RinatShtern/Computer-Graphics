@@ -30,7 +30,10 @@ public class Plane implements Geometry {
      * @param p3 the third point
      */
     public Plane(Point p1, Point p2, Point p3) {
-        this.normal = null; // Calculation of normal vector to be implemented
+        Vector v1 = p2.subtract(p1);
+        Vector v2 = p3.subtract(p1);
+        Vector n  = v1.crossProduct(v2); // Calculation of normal vector to be implemented
+        normal = n.normalize();
         this.q = p1;
     }
 

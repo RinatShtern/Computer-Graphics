@@ -11,7 +11,7 @@ public class VectorTests {
 
     /** Test method for {@link primitives.Vector#crossProduct(primitives.Vector)}. */
     @Test
-    public void testcrossProduct() {
+    public void testCrossProduct() {
         // ============ Equivalence Partitions Tests ==============
         Vector v123 = new Vector(0,0,1);
         Vector v03M2 = new Vector(1,0,0);

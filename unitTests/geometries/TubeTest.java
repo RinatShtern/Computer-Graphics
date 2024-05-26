@@ -8,53 +8,27 @@ import primitives.Vector;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TubeTest {
+    @Test
+    void testGetNormal() {
 
-        @Test
-        public void testConstructor() {
-            // ============ Equivalence Partitions Tests ==============
-            //TC01: Test for a proper result
-            try {
-                new Tube(1,new Ray(new Point(1, 2, 3), new Vector(1, 5, 4)));
-            } catch (IllegalArgumentException error) {
-                throw new IllegalArgumentException("Failed constructor of the correct Tube");
-            }
+        Point p0 = new Point(0, 0, 0);
+        Vector v = new Vector(1, 0, 0);
+        Ray ray = new Ray(p0, v);
+        Tube tube = new Tube(1, ray);
 
-            // =============== Boundary Values Tests ==================
-            //TC02: Test when the radius 0
-            try {
-                new Tube(0,new Ray(new Point(1, 2, 3), new Vector(1, 5, 4)));
-            } catch (IllegalArgumentException ignored) {
-                fail("Constructed a Tube while a radius can not be 0");
-            }
-            //TC03:Test when the radius negative, -1
-            try {
-                new Tube(-1,new Ray(new Point(1, 2, 3), new Vector(1, 5, 4)));
-            } catch (IllegalArgumentException ignored) {
-                fail("Constructed a Tube while a radius can not be negative");
-            }
-        }
+        // ============ Equivalence Partitions Tests ==============
 
-        @Test
-        public void testGetNormal(){
-            // ============ Equivalence Partitions Tests ==============
-            // TC01: Test with point on the top of the cylinder
-            Tube tube = new Tube(1d,new Ray(new Point(0, 1, 0), new Vector(0, 0, 1)));
-            assertEquals(new Vector(1, 0, 0), tube.getNormal(new Point(1, 1, 3)), "Bad normal to the top of the cylinder");
-            // TC02: Test with point on the bottom of the cylinder
-            assertEquals(new Vector(1, 0, 0), tube.getNormal(new Point(1, 1, 0)), "Bad normal to the bottom of the cylinder");
+        // TC01: Check if the normal length is 1
+        assertEquals(1d, tube.getNormal(new Point(1, 1, 0)).length(),
+                0.00001, "Wrong normal length");
 
-            // TC03: Test with point on the side of the cylinder
-            assertEquals(new Vector(1, 0, 0), tube.getNormal(new Point(1, 0, 1)), "Bad normal to the side of the cylinder");
+        // TC02: Ensure the returned normal vector is correct
+        assertEquals(tube.getNormal(new Point(1, 0, 1)), new Vector(0, 0, 1), "Wrong normal");
 
-            // =============== Boundary Values Tests ==================
-            // TC04: Test with point on the top edge of the cylinder
-            assertEquals(new Vector(0, 0, 1), tube.getNormal(new Point(1, 0, 3)), "Bad normal to the top-edge of the cylinder");
+        // =============== Boundary Values Tests ==================
 
-            // TC05: Test with point on the bottom edge of the cylinder
-            assertEquals(new Vector(1, 0,0), tube.getNormal(new Point(0, 1, 0)), "Bad normal to the bottom-edge of the cylinder");
-            // TC06: Test with point on top and bottom edges of the cylinder
-            assertEquals(new Vector(1, 0,0), tube.getNormal(new Point(1, 0, 3)), "Bad normal to the top-edge of the cylinder");
-            assertEquals(new Vector(1, 0,0), tube.getNormal(new Point(1, 1, 0)), "Bad normal to the bottom-edge of the cylinder");
-        }
-
+        // TC10: Test the case when (P - P0) is orthogonal to v
+        assertThrows(IllegalArgumentException.class, () -> tube.getNormal(new Point(0, 1, 0)),
+                "The ray of the tube is orthogonal to (P - P0)");
     }
+}

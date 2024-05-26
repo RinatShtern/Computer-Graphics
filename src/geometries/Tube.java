@@ -4,6 +4,8 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import static primitives.Util.isZero;
+
 /**
  * Represents a tube geometry in the 3D space.
  * A tube is a cylindrical geometry with no end caps, defined by its radius and axis.
@@ -18,6 +20,8 @@ public class Tube extends RadialGeometry {
      */
     public Tube(double radius,Ray ray) {
         super(radius);
+        if (radius <= 0)
+            throw new IllegalArgumentException("radius must be positive value");
         axis = ray;
     }
 
@@ -32,6 +36,17 @@ public class Tube extends RadialGeometry {
         Vector p0_p = p.subtract(axis.getHead());
         double t = axis.getDirection().dotProduct(p0_p);
         Point o = axis.getHead().add(axis.getDirection().scale(t));
-        return p.subtract(o).normalize();
+
+        //given point is on axis ray
+        if (p.equals(o))
+            throw new IllegalArgumentException("point cannot be on the axis ray");
+
+        // point is against tube origin point
+        if (isZero(t))
+            return p.subtract(axis.getHead()).normalize();
+        // any other point
+        else
+            return p.subtract(o).normalize();
+
     }
 }

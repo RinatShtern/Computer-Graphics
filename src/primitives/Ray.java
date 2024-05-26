@@ -7,6 +7,7 @@ import java.util.Objects;
  * A ray is defined by its starting point (head) and a direction vector.
  */
 public class Ray {
+
     final private Point head; // The starting point of the ray
     final private Vector direction; // The direction vector of the ray
 
@@ -59,4 +60,12 @@ public class Ray {
         result = 31 * result + Objects.hashCode(direction);
         return result;
     }
+
+    public Vector getDirection() {
+        return direction;
+    }
+    public Point getHead() {
+        return head;
+    }
+
 }

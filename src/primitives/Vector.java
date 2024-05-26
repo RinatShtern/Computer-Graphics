@@ -51,7 +51,7 @@ public class Vector extends Point {
      */
     public Vector scale(double scalar) {
         if(isZero(scalar))
-            throw new IllegalArgumentException("A vector cannot be scaled by()");
+            throw new IllegalArgumentException("A vector cannot be scaled by " +scalar);
 
         return new Vector(xyz.scale(scalar));
     }
@@ -129,5 +129,10 @@ public class Vector extends Point {
     @Override
     public int hashCode() {
         return xyz.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Vector{" + xyz + '}';
     }
 }

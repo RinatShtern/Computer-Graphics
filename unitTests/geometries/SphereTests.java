@@ -6,13 +6,10 @@ import primitives.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Testing Polygons
- * @author Dan
- */
-public class CylinderTests {
+public class SphereTests {
+
     /**
-     * Test method for {@link geometries.Cylinder#getNormal(primitives.Point)}.
+     * Test method for {@link geometries.Sphere#getNormal(primitives.Point)}.
      */
     @Test
     public void testGetNormal() {

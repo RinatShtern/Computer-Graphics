@@ -11,12 +11,12 @@ import primitives.Vector;
  */
 public class Cylinder extends Tube {
     private final double height; // The height of the cylinder
-
     /**
      * Constructs a new cylinder.
      *
      * @param radius the radius of the cylinder
      * @param height the height of the cylinder
+     * @param ray the ray of the cilinder
      */
     public Cylinder(double radius, Ray ray, double height) {
         super(radius,ray);
@@ -31,6 +31,11 @@ public class Cylinder extends Tube {
      */
     @Override
     public Vector getNormal(Point p) {
-        return null; // Not implemented yet
+        Vector vTop = p.subtract(new Point(0,0,0));
+        double pointHeight = vTop.dotProduct(new Vector(0,1,0));
+
+        return vTop.subtract(new Vector(0,pointHeight,0)).normalize();
+
     }
+
 }

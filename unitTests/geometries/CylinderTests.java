@@ -2,25 +2,26 @@ package geometries;
 
 import org.junit.jupiter.api.Test;
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Testing Polygons
- * @author Dan
- */
 public class CylinderTests {
     /**
      * Test method for {@link geometries.Cylinder#getNormal(primitives.Point)}.
      */
     @Test
     public void testGetNormal() {
-        // ============ Equivalence Partitions Tests ==============
-        //TC01: a simple test
-        Sphere s = new Sphere(Point.ZERO, 2);
-        assertEquals(new Vector(1, 0, 0),
-                s.getNormal(new Point(1, 0, 0)),
-                "ERROR: getNormal() is wrong");
+        // ============ Partitions Tests ==============
+        Point p = new Point(1,0,1);
+        Vector expectedNormal = new Vector(0,1,0);
+        Ray ray = new Ray(p,expectedNormal);
+        Cylinder cylinder = new Cylinder(1,ray,2);
+        Vector actualNormal =cylinder.getNormal(p);
+        assertEquals(expectedNormal,actualNormal,
+                "ERROR: getNormal() douse not return the correct normal");
+
+
     }
 }

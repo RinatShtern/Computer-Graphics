@@ -8,9 +8,14 @@ import primitives.Vector;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TubeTest {
+    /**
+     * Delta value for accuracy when comparing the numbers of type 'double' in assertEquals
+     */
+    private static final double DELTA = 0.000001;
+
     @Test
     void testGetNormal() {
-
+        // Create a tube with radius 1 and direction (1, 0, 0)
         Point p0 = new Point(0, 0, 0);
         Vector v = new Vector(1, 0, 0);
         Ray ray = new Ray(p0, v);
@@ -19,16 +24,21 @@ class TubeTest {
         // ============ Equivalence Partitions Tests ==============
 
         // TC01: Check if the normal length is 1
-        assertEquals(1d, tube.getNormal(new Point(1, 1, 0)).length(),
-                0.00001, "Wrong normal length");
+        Point point1 = new Point(1, 1, 0);
+        Vector normal1 = tube.getNormal(point1);
+        assertEquals(1, normal1.length(), DELTA, "Wrong normal length");
 
         // TC02: Ensure the returned normal vector is correct
-        assertEquals(tube.getNormal(new Point(1, 0, 1)), new Vector(0, 0, 1), "Wrong normal");
+        Point point2 = new Point(1, 0, 1);
+        Vector expectedNormal = new Vector(0, 0, 1);
+        assertEquals(expectedNormal, normal1, "Wrong normal");
 
         // =============== Boundary Values Tests ==================
 
         // TC10: Test the case when (P - P0) is orthogonal to v
-        assertThrows(IllegalArgumentException.class, () -> tube.getNormal(new Point(0, 1, 0)),
-                "The ray of the tube is orthogonal to (P - P0)");
+        Point point3 = new Point(0, 1, 0);
+        Vector normal3 = tube.getNormal(point3);
+        assertEquals(1, normal3.length(), DELTA, "Wrong normal length for orthogonal case");
+        assertEquals(0, normal3.dotProduct(v), DELTA, "Normal is not orthogonal to the tube's direction");
     }
 }

@@ -4,6 +4,8 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.List;
+
 import static primitives.Util.isZero;
 
 /**
@@ -60,5 +62,8 @@ public class Cylinder extends Tube {
         //The point on the side, handle it like a tube.
         return super.getNormal(p);
     }
-
+    @Override
+    public List<Point> findIntsersections(Ray ray) {
+        return null;
+    }
 }

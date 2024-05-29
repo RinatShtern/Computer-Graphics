@@ -64,4 +64,7 @@ public class CylinderTests {
         assertEquals(expectedNormalSide, cylinder.getNormal(pointSide),
                 "ERROR: getNormal() does not return the correct normal for side surface");
     }
+    @Test
+    void findIntsersections(){}
+
 }

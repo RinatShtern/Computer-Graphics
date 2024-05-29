@@ -58,4 +58,6 @@ class PlaneTests {
         dotProduct = normal.dotProduct(vector2);
         assertEquals(0, dotProduct, "Normal vector is not perpendicular to the plane");
     }
+    @Test
+    void findIntsersections(){}
 }

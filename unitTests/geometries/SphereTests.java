@@ -38,4 +38,6 @@ class SphereTest {
         // Test if the normal is orthogonal to the radius vector
         assertEquals(0, normal.dotProduct(radiusVector), DELTA, "Sphere's normal is not orthogonal to the radius vector");
     }
+    @Test
+    void findIntsersections(){}
 }

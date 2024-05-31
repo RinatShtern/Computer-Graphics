@@ -1,5 +1,7 @@
 package geometries;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class GeometriesTests {
@@ -8,5 +10,5 @@ class GeometriesTests {
         // BVA - מקרה קצה עליון תחתון
         Geometries geometries = new Geometries();
         assertTrue(geometries.getIntersectables().isEmpty(), "The list should be empty.");
-
+    }
 }

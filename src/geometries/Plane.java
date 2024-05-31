@@ -4,7 +4,11 @@ import primitives.Ray;
 import primitives.Vector;
 import primitives.Point;
 
+import java.util.Collection;
 import java.util.List;
+
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 /**
  * Represents a plane geometry in the 3D space.
@@ -62,6 +66,36 @@ public class Plane implements Geometry {
 
     @Override
     public List<Point> findIntsersections(Ray ray) {
+        return null;
+    }
+
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        Point p0 = ray.getHead();
+        Vector v = ray.getDirection();
+        Vector n = normal;
+
+        double nv = alignZero(n.dotProduct(v));
+
+        //if ray is parallel to plane - no intersection points
+        if (isZero(nv)) {
+            return null;
+        }
+
+        Vector P0_Q = p0.subtract(q);
+
+        double t = alignZero(n.dotProduct(P0_Q) / nv);
+
+        //if ( t == 0) origin of ray lay on the plane
+        if (isZero(t)) {
+            return null;
+        }
+
+        // if (t < 0) the direction of the ray points in the opposite direction
+        if (t > 0) {
+            Point P = p0.add(v.scale(t));
+            return List.of(P);
+        }
         return null;
     }
 }

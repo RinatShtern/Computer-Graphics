@@ -1,13 +1,17 @@
 package geometries;
 
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
 
 /**
  * The Geometry interface represents geometric objects in the 3D space.
  * Implementing classes should provide methods for calculating normal vectors at given points.
  */
-public interface Geometry extends Intersectable {
+public interface Geometry extends Intersectable
+{
 
     /**
      * Calculates the normal vector to the geometry at the specified point.
@@ -16,4 +20,6 @@ public interface Geometry extends Intersectable {
      * @return the normal vector to the geometry at the specified point
      */
     Vector getNormal(Point p);
+
+    List<Point> findIntersections(Ray ray);
 }

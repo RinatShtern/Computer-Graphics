@@ -41,4 +41,9 @@ class TubeTest {
         assertEquals(1, normal3.length(), DELTA, "Wrong normal length for orthogonal case");
         assertEquals(0, normal3.dotProduct(v), DELTA, "Normal is not orthogonal to the tube's direction");
     }
+
+    @Test
+    public void testFindIntersections () {
+
+    }
 }

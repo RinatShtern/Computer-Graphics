@@ -89,4 +89,8 @@ public class Point {
     public String toString() {
         return "Point{" + xyz + '}';
     }
+
+    public double getX() {
+        return xyz.d1;
+    }
 }

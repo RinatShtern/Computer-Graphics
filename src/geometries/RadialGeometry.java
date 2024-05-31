@@ -1,5 +1,10 @@
 package geometries;
 
+import primitives.Point;
+import primitives.Ray;
+
+import java.util.List;
+
 /**
  * Abstract class representing radial geometries in the geometry system.
  * Radial geometries are geometries defined by a single radius parameter.
@@ -15,4 +20,6 @@ public abstract class RadialGeometry implements Geometry {
     public RadialGeometry(double radius) {
         this.radius = radius;
     }
+
+    public abstract List<Point> findIntersections(Ray ray);
 }

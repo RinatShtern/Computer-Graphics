@@ -58,4 +58,8 @@ public class Tube extends RadialGeometry {
     }
 
 
+    @Override
+    public List<Point> findIntsersections(Ray ray) {
+        return List.of();
+    }
 }

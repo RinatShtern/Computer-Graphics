@@ -83,8 +83,5 @@ public class Sphere implements Geometry {
         return List.of(p2);
     }
 
-    @Override
-    public List<Point> findIntsersections(Ray ray) {
-        return List.of();
-    }
+
 }

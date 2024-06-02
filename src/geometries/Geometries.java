@@ -18,12 +18,33 @@ public class Geometries implements Intersectable{
         Collections.addAll(this.geometries,geometries);
     }
 
+    /**
+     * Finds the intersection points between a ray and the geometries.
+     *
+     * @param ray the ray to intersect with
+     * @return list of intersection points, or null if no intersections
+     */
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        List<Point> intersectionPoints = null;
 
+        for (Intersectable geometry : geometries) {
+            List<Point> geometryPoints = geometry.findIntersections(ray);
+            if (geometryPoints != null) {
+                if (intersectionPoints == null) {
+                    intersectionPoints = new LinkedList<>();
+                }
+                intersectionPoints.addAll(geometryPoints);
+            }
+        }
+
+        return intersectionPoints;
+    }
     public List<Point> intersectionPoints(Ray ray) {
         List<Point> intersectionPoints = null;
         List<Point> geometryPoints = List.of();
         for (Intersectable geometry : this.geometries) {
-            geometryPoints = geometry.findIntsersections(ray);
+            geometryPoints = geometry.findIntersections(ray);
             if (geometryPoints != null) {
                 if (intersectionPoints == null) {
                     intersectionPoints = new LinkedList<>();
@@ -44,8 +65,5 @@ public class Geometries implements Intersectable{
         return this.geometries.toString();
     }
 
-    @Override
-    public List<Point> findIntsersections(Ray ray) {
-        return List.of();
-    }
+
 }

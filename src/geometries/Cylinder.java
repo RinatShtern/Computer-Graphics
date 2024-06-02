@@ -62,8 +62,5 @@ public class Cylinder extends Tube {
         //The point on the side, handle it like a tube.
         return super.getNormal(p);
     }
-    @Override
-    public List<Point> findIntsersections(Ray ray) {
-        return null;
-    }
+
 }

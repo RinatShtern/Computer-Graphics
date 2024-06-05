@@ -31,14 +31,13 @@ class TubeTest {
         assertEquals(1, normal1.length(), DELTA, "Wrong normal length");
 
         // TC02: Ensure the returned normal vector is correct
-        Point point2 = new Point(1, 0, 1);
-        Vector expectedNormal = new Vector(0, 0, 1);
+        Vector expectedNormal = new Vector(0,1,0);
         assertEquals(expectedNormal, normal1, "Wrong normal");
 
         // =============== Boundary Values Tests ==================
 
         // TC10: Test the case when (P - P0) is orthogonal to v
-        Point point3 = new Point(0, 1, 0);
+        Point point3 = new Point(1, 0, 1);
         Vector normal3 = tube.getNormal(point3);
         assertEquals(1, normal3.length(), DELTA, "Wrong normal length for orthogonal case");
         assertEquals(0, normal3.dotProduct(v), DELTA, "Normal is not orthogonal to the tube's direction");

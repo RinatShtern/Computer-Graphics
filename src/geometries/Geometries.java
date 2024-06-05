@@ -6,7 +6,7 @@ import primitives.Ray;
 import java.util.*;
 
 public class Geometries implements Intersectable{
-    final private List<Intersectable> geometries = new LinkedList<>();;
+    final private List<Intersectable> geometries = new LinkedList<>();
 
     public Geometries(){}
 
@@ -27,23 +27,8 @@ public class Geometries implements Intersectable{
     @Override
     public List<Point> findIntersections(Ray ray) {
         List<Point> intersectionPoints = null;
-
+        List<Point> geometryPoints;
         for (Intersectable geometry : geometries) {
-            List<Point> geometryPoints = geometry.findIntersections(ray);
-            if (geometryPoints != null) {
-                if (intersectionPoints == null) {
-                    intersectionPoints = new LinkedList<>();
-                }
-                intersectionPoints.addAll(geometryPoints);
-            }
-        }
-
-        return intersectionPoints;
-    }
-    public List<Point> intersectionPoints(Ray ray) {
-        List<Point> intersectionPoints = null;
-        List<Point> geometryPoints = List.of();
-        for (Intersectable geometry : this.geometries) {
             geometryPoints = geometry.findIntersections(ray);
             if (geometryPoints != null) {
                 if (intersectionPoints == null) {
@@ -55,9 +40,8 @@ public class Geometries implements Intersectable{
         if(intersectionPoints == null)
             return null;
 
-        return intersectionPoints
-                .stream()
-                .sorted()
+        return intersectionPoints.stream()
+                .sorted(Comparator.comparingDouble(p->p.distance(ray.getHead())))
                 .toList();
     }
 

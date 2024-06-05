@@ -1,44 +1,55 @@
 package geometries;
 
-
-import org.junit.jupiter.api.Test;
 import primitives.Point;
 import primitives.Ray;
-import primitives.Vector;
-
-import java.util.List;
-
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+import primitives.Vector;
+
 
 class GeometriesTests {
     @Test
     void testFindIntersections() {
         Geometries geometries = new Geometries();
+        Vector v1 = new Vector(1, 0, 0);
+        Ray ray = new Ray(new Point(-1, 0, 1), v1);
 
-        // Test case where no geometries are added
-        Ray ray1 = new Ray(new Point(1, 1, 1), new Vector(1, 1, 1));
-        assertNull(geometries.findIntersections(ray1), "No geometries - should return null");
+        // ============ Boundary Values Tests ==============
+        //TC01: empty list
+        assertNull(geometries.findIntersections(ray), "No geometries - should return null");
+        //TC02: No shape has intersections with the Ray
+        Triangle onSideTriangle = new Triangle(new Point(1, 1, 1), new Point(1, 1, 0), new Point(1, 2, 0));
+        Point p = new Point(0, -2, 0);
+        Sphere onSideSphere = new Sphere(p, 1);
+        Plane flatPlane = new Plane(new Vector(0, 0, 1),new Point(1, 1, 1));
 
-        // Add some geometries
-        Sphere sphere = new Sphere(new Point(0, 0, 0),1.0);
-        Plane plane = new Plane(new Vector(0, 0, 1), new Point(0, 0, 1));
-        geometries.add(sphere, plane);
 
-        // Test case where the ray intersects the sphere and the plane
-        Ray ray2 = new Ray(new Point(0, 0, -3), new Vector(0, 0, 1));
-        List<Point> result2 = geometries.findIntersections(ray2);
-        assertNotNull(result2, "Ray intersects geometries - should not return null");
-        assertEquals(3, result2.size(), "Should find three intersection points");
+        geometries.add(onSideSphere, onSideTriangle, flatPlane);
+        assertNull(geometries.findIntersections(ray),
+                "wrong result when no shape has intersections with the Ray- expected to 0 points");
 
-        // Test case where the ray intersects none of the geometries
-        Ray ray3 = new Ray(new Point(2, 2, 2), new Vector(1, 1, 1));
-        assertNull(geometries.findIntersections(ray3), "Ray intersects no geometries - should return null");
+        //TC03: only one shape has intersections with the ray (triangle)
+        Vector v2 = new Vector(1, 0, 0);
+        Ray ray2 = new Ray(new Point(-1, 3, 1), v2);
+        Triangle onCenterTriangle = new Triangle(new Point(1, 0, 2), new Point(1, 1, 0), new Point(1, 7, 0));
+        geometries.add(onCenterTriangle);
+        assertEquals(1, geometries.findIntersections(ray2).size(),
+                "wrong result: expected to find 1 point");
+
+        //TC04: all the shapes have intersections with the ray (triangle, plane and sphere)
+        Plane plane = new Plane( new Vector(1, 0, 0),new Point(3, 0, 0));
+        Sphere onCenterSphere = new Sphere(p, 2); //geometries2 has only 2 shapes on center
+        Geometries geometries2 = new Geometries(onCenterSphere, onCenterTriangle, plane);
+        assertEquals(4, geometries2.findIntersections(ray).size(),
+                "wrong result: expected to find 4 points");
+
+        // ============ Equivalence Partitions Tests ==============
+        geometries.add(onCenterSphere); //geometries has 2 shapes on sides and 2 shapes on center
+        assertEquals(3, geometries.findIntersections(ray).size(),
+                "wrong result: expected to find 3 points");
     }
-    @Test
-    public void testAddEmpty() {
-        // BVA - מקרה קצה עליון תחתון
-        Geometries geometries = new Geometries();
-        assertTrue(geometries.getIntersectables().isEmpty(), "The list should be empty.");
-    }
+
 }
+

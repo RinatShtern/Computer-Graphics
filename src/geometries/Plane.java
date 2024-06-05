@@ -77,7 +77,8 @@ public class Plane implements Geometry {
             return null;
         }
 
-        Vector P0_Q = p0.subtract(q);
+        //Vector P0_Q = p0.subtract(q);
+        Vector P0_Q = q.subtract(ray.getHead());
 
         double t = alignZero(n.dotProduct(P0_Q) / nv);
 

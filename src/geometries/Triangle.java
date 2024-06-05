@@ -32,9 +32,9 @@ public class Triangle extends Polygon {
         Vector vector2 = point2.subtract(pointP0);
         Vector vector3 = point3.subtract(pointP0);
 
-        Vector normal1 = vector1.crossProduct(vector2).normalize();
-        Vector normal2 = vector2.crossProduct(vector3).normalize();
-        Vector normal3 = vector3.crossProduct(vector1).normalize();
+        Vector normal1 = vector1.crossProduct(vector2);
+        Vector normal2 = vector2.crossProduct(vector3);
+        Vector normal3 = vector3.crossProduct(vector1);
 
         double d1 = vectorDirect.dotProduct(normal1);
         double d2 = vectorDirect.dotProduct(normal2);

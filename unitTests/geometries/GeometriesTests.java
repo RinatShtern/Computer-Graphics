@@ -31,11 +31,12 @@ class GeometriesTests {
                 "wrong result when no shape has intersections with the Ray- expected to 0 points");
 
         //TC03: only one shape has intersections with the ray (triangle)
-        Vector v2 = new Vector(1, 0, 0);
-        Ray ray2 = new Ray(new Point(-1, 3, 1), v2);
+        Geometries geometries_temp = new Geometries();
+        Vector v2 = new Vector(1, 0, 1);
+        Ray ray2 = new Ray(new Point(-1, 3, -1.5), v2);
         Triangle onCenterTriangle = new Triangle(new Point(1, 0, 2), new Point(1, 1, 0), new Point(1, 7, 0));
         geometries.add(onCenterTriangle);
-        assertEquals(1, geometries.findIntersections(ray2).size(),
+        assertEquals(1, geometries_temp.findIntersections(ray2).size(),
                 "wrong result: expected to find 1 point");
 
         //TC04: all the shapes have intersections with the ray (triangle, plane and sphere)

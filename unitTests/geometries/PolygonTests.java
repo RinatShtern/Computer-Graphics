@@ -3,6 +3,8 @@ package geometries;
 import org.junit.jupiter.api.Test;
 import primitives.*;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -84,6 +86,24 @@ public class PolygonTests {
                     "Polygon's normal is not orthogonal to one of the edges");
     }
     @Test
-    void findIntsersections(){}
+    void testFindIntersections() {
+        // Define the vertices of the polygon
+        Point p1 = new Point(1, 0, 0);
+        Point p2 = new Point(0, 3, 0);
+        Point p3 = new Point(5, 2, 0);
+
+        // Create the polygon
+        Polygon polygon = new Polygon(p1, p2, p3);
+
+        // Test ray intersecting the polygon
+        Ray ray1 = new Ray(new Point(0, 0, 1), new Vector(1, 1, -1));
+        List<Point> result1 = polygon.findIntersections(ray1);
+        assertEquals(1, result1.size(), "Wrong number of intersection points for ray intersecting the polygon");
+        assertEquals(new Point(1,1,0), result1.get(0), "Wrong intersection point for ray intersecting the polygon");
+
+        // Test ray not intersecting the polygon
+        Ray ray2 = new Ray(new Point(0, 0, 1), new Vector(0, 0, -1));
+        assertNull(polygon.findIntersections(ray2), "Ray should not intersect the polygon");
+    }
 
 }

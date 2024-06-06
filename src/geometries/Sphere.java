@@ -45,8 +45,11 @@ public class Sphere implements Geometry {
         Point center = this.center;
         double radius = this.radius;
 
-        Vector u = center.subtract(p0);
+        if(p0.equals(center)) {
+            return List.of(center.add(v.scale(radius)));
+        }
 
+        Vector u = center.subtract(p0);
         double tm = alignZero(v.dotProduct(u));
         double dSquared = alignZero(u.lengthSquared() - tm * tm);
         double radiusSquared = radius * radius;
@@ -69,7 +72,11 @@ public class Sphere implements Geometry {
         if (t1 > 0 && t2 > 0) {
             Point p1 = p0.add(v.scale(t1));
             Point p2 = p0.add(v.scale(t2));
-            return List.of(p1, p2);
+//**
+            if (p0.distance(p1) < p0.distance(p2))
+                return List.of(p1, p2);
+
+            return List.of(p2, p1);
         }
 
         // if only t1 > 0, return one intersection

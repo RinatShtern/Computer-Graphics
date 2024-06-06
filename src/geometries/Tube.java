@@ -51,9 +51,38 @@ public class Tube extends RadialGeometry {
             return p.subtract(o).normalize();
 
     }
-
     @Override
     public List<Point> findIntersections(Ray ray) {
-        return null;
+        // Calculate the projection of the ray's head onto the tube's axis
+        double t = axis.getDirection().dotProduct(ray.getDirection());
+        Vector v;
+        try {
+            v = ray.getHead().subtract(axis.getHead().add(axis.getDirection().scale(t)));
+        } catch (IllegalArgumentException e) {
+            // The ray's head is on the axis
+            v = ray.getHead().subtract(axis.getHead());
+        }
+
+        double a = ray.getDirection().lengthSquared();
+        double b = 2 * ray.getDirection().dotProduct(v);
+        double c = v.lengthSquared() - radius * radius;
+
+        double discriminant = b * b - 4 * a * c;
+
+        if (discriminant < 0) {
+            // No intersections
+            return null;
+        } else if (isZero(discriminant)) {
+            // One intersection
+            double t1 = -b / (2 * a);
+            return List.of(ray.getPoint(t1));
+        } else {
+            // Two intersections
+            double sqrtDiscriminant = Math.sqrt(discriminant);
+            double t1 = (-b + sqrtDiscriminant) / (2 * a);
+            double t2 = (-b - sqrtDiscriminant) / (2 * a);
+            return List.of(ray.getPoint(t1), ray.getPoint(t2));
+        }
     }
+
 }

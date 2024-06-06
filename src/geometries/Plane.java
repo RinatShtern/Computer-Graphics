@@ -77,6 +77,17 @@ public class Plane implements Geometry {
             return null;
         }
 
+        // Check if the ray starts at the reference point of the plane
+        if (p0.equals(q)) {
+            // If the direction vector is also in the plane (dot product is zero), no intersection
+            if (isZero(n.dotProduct(v))) {
+                return null;
+            } else {
+                // If the direction vector is not zero, return the starting point
+                return List.of(p0);
+            }
+        }
+
         //Vector P0_Q = p0.subtract(q);
         Vector P0_Q = q.subtract(ray.getHead());
 

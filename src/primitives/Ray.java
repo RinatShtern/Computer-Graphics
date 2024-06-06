@@ -69,8 +69,8 @@ public class Ray {
     }
 
     public Point getPoint(double t){
-       if(t==0)
-           return head;
+        if(t==0)
+            return head;
         return head.add(direction.scale(t));
     }
 

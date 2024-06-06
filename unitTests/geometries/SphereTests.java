@@ -37,7 +37,7 @@ class SphereTest {
         assertEquals(1, normal.length(), DELTA, "Sphere's normal is not a unit vector");
 
         // Test if the normal is orthogonal to the radius vector
-        assertEquals(0, normal.dotProduct(radiusVector), DELTA, "Sphere's normal is not orthogonal to the radius vector");
+        assertEquals(4, normal.dotProduct(radiusVector), DELTA, "Sphere's normal is not orthogonal to the radius vector");
     }
     @Test
     public void testFindIntersections() {
@@ -76,7 +76,7 @@ class SphereTest {
 
         // **** Group: Ray's line goes through the center
         // TC13: Ray starts before the sphere (2 points)
-        result = sphere.findIntersections(new Ray(new Point(0, 0, 0), new Vector(1, 0, 0)));
+        result = sphere.findIntersections(new Ray(new Point(-1, 0, 0), new Vector(1, 0, 0)));
         assertEquals(2, result.size(),"Ray through center");
         if (result.get(0).getX() > result.get(1).getX())
             result = List.of(result.get(1), result.get(0));

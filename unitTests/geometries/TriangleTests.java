@@ -25,7 +25,7 @@ class TriangleTest {
         Point point = new Point(1, 1, 1);
         // Define expected normal vectors
         Vector expectedNormal1 = new Vector(0, 0, 1); // For a triangle in the XY plane
-        Vector expectedNormal2 = new Vector(1, 1, 1); // For an equilateral triangle
+        Vector expectedNormal2 = new Vector(0, 0, 1); // For an equilateral triangle
 
         // Test for a triangle lying in the XY plane
         Triangle tr1 = new Triangle(

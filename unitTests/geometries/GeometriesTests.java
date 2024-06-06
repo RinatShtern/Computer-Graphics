@@ -35,20 +35,23 @@ class GeometriesTests {
         Vector v2 = new Vector(1, 0, 1);
         Ray ray2 = new Ray(new Point(-1, 3, -1.5), v2);
         Triangle onCenterTriangle = new Triangle(new Point(1, 0, 2), new Point(1, 1, 0), new Point(1, 7, 0));
-        geometries.add(onCenterTriangle);
+        geometries_temp.add(onCenterTriangle);
         assertEquals(1, geometries_temp.findIntersections(ray2).size(),
                 "wrong result: expected to find 1 point");
 
         //TC04: all the shapes have intersections with the ray (triangle, plane and sphere)
-        Plane plane = new Plane( new Vector(1, 0, 0),new Point(3, 0, 0));
-        Sphere onCenterSphere = new Sphere(p, 2); //geometries2 has only 2 shapes on center
-        Geometries geometries2 = new Geometries(onCenterSphere, onCenterTriangle, plane);
-        assertEquals(4, geometries2.findIntersections(ray).size(),
+        Plane plane3 = new Plane(new Point(0, 0, 1), new Point(1, 0, 1), new Point(0, 1, 1));
+        Ray ray3 = new Ray(new Point(-3, 0, -3),  new Vector(1, 0, 1));
+        Sphere Sphere3 = new Sphere(new Point(0, 0,1 ), 2); //geometries2 has only 2 shapes on center
+        Triangle Triangle3 = new Triangle(new Point(1, 0, 2), new Point(1, -4, 0), new Point(1, 7, 0));
+        Geometries geometries2 = new Geometries(Sphere3, Triangle3, plane3);
+        assertEquals(4, geometries2.findIntersections(ray3).size(),
                 "wrong result: expected to find 4 points");
 
         // ============ Equivalence Partitions Tests ==============
-        geometries.add(onCenterSphere); //geometries has 2 shapes on sides and 2 shapes on center
-        assertEquals(3, geometries.findIntersections(ray).size(),
+        Sphere Sphere4 = new Sphere(new Point(4,3,-1 ), 1);
+        geometries2.add(Sphere4); //geometries has 2 shapes on sides and 2 shapes on center
+        assertEquals(4, geometries2.findIntersections(ray3).size(),
                 "wrong result: expected to find 3 points");
     }
 

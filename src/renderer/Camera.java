@@ -51,13 +51,13 @@ public class Camera implements Cloneable {
     //nY-sum of lines
     //j-column
     //i-line
-    public Ray constuctorRay(int nX, int nY, int j, int i) {
+    public Ray constructRay(int nX, int nY, int j, int i) {
         return null;
     }
 
-//    public static Builder getBuilder() {
-//
-//    }
+    public static Builder getBuilder() {
+        return new Builder();
+    }
 
     public static class Builder {
         final private Camera camera = new Camera();

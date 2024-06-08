@@ -70,9 +70,10 @@ public class Sphere implements Geometry {
 
         // if t1 > 0 and t2 > 0, return two intersections
         if (t1 > 0 && t2 > 0) {
-            Point p1 = p0.add(v.scale(t1));
-            Point p2 = p0.add(v.scale(t2));
-//**
+//            Point p1 = p0.add(v.scale(t1));
+//            Point p2 = p0.add(v.scale(t2));
+            Point p1 = ray.getPoint(t1);
+            Point p2 = ray.getPoint(t2);
             if (p0.distance(p1) < p0.distance(p2))
                 return List.of(p1, p2);
 
@@ -81,13 +82,16 @@ public class Sphere implements Geometry {
 
         // if only t1 > 0, return one intersection
         if (t1 > 0) {
-            Point p1 = p0.add(v.scale(t1));
-            return List.of(p1);
+//            Point p1 = p0.add(v.scale(t1));
+//            return List.of(p1);
+            return List.of(ray.getPoint(t1));
         }
 
         // if only t2 > 0, return one intersection
-        Point p2 = p0.add(v.scale(t2));
-        return List.of(p2);
+//        Point p2 = p0.add(v.scale(t2));
+//        return List.of(p2);
+        return List.of(ray.getPoint(t2));
+
     }
 
 

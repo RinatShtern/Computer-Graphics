@@ -30,6 +30,10 @@ public class Point {
         this.xyz = xyz;
     }
 
+    public Double3 getXyz() {
+        return xyz;
+    }
+
     /**
      * Adds a vector to the point, returning a new point.
      *

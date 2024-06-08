@@ -100,7 +100,8 @@ public class Plane implements Geometry {
 
         // if (t < 0) the direction of the ray points in the opposite direction
         if (t > 0) {
-            Point P = p0.add(v.scale(t));
+          //  Point P = p0.add(v.scale(t));
+            Point P = ray.getPoint(t); // Using getPoint to find the intersection point
             return List.of(P);
         }
         return null;

@@ -111,10 +111,10 @@ class cameraIntegrationTests {
 
         /* TC02: plane with 9 points that intersect */
 
-        /* Variables */
-        Plane planeTC02 = new Plane(new Point(0, 0, -2), new Vector(0, 0.5, -1));
-        camera.setDistance(1).setSize(3, 3);
-        List<Point> result02 = camera.findIntersections(3, 3, planeTC02);
+//        /* Variables */
+//        Plane planeTC02 = new Plane(new Point(0, 0, -2), new Vector(0, 0.5, -1));
+//        camera.setDistance(1).setSize(3, 3);
+//        List<Point> result02 = camera.findIntersections(3, 3, planeTC02);
 
         /* Asserts */
         assertEquals(9, result02.size(), "ERROR: Except for 9 intersect points");

@@ -20,6 +20,7 @@ public class Camera implements Cloneable {
         return location;
     }
 
+
     public Vector getRight() {
         return right;
     }
@@ -44,6 +45,19 @@ public class Camera implements Cloneable {
         return distance;
     }
 
+    public Camera setDistance(double distance) {
+        this.distance = distance;
+        return this;
+    }
+
+
+
+    public Camera(Point location, Vector up, Vector to) {
+        this.location = location;
+        this.up = up;
+        this.to = to;
+    }
+
     private Camera() {
     }
 
@@ -58,6 +72,8 @@ public class Camera implements Cloneable {
     public static Builder getBuilder() {
         return new Builder();
     }
+
+
 
     public static class Builder {
         final private Camera camera = new Camera();

@@ -35,9 +35,11 @@ public class Tube extends RadialGeometry {
      */
     @Override
     public Vector getNormal(Point p) {
+
+        //  Point o = axis.getHead().add(axis.getDirection().scale(t));
         Vector p0_p = p.subtract(axis.getHead());
         double t = axis.getDirection().dotProduct(p0_p);
-        Point o = axis.getHead().add(axis.getDirection().scale(t));
+        Point o = axis.getPoint(t); // Using getPoint
 
         //given point is on axis ray
         if (p.equals(o))
@@ -57,7 +59,8 @@ public class Tube extends RadialGeometry {
         double t = axis.getDirection().dotProduct(ray.getDirection());
         Vector v;
         try {
-            v = ray.getHead().subtract(axis.getHead().add(axis.getDirection().scale(t)));
+            v = ray.getHead().subtract(axis.getPoint(t)); // Using getPoint
+            //v = ray.getHead().subtract(axis.getHead().add(axis.getDirection().scale(t)));
         } catch (IllegalArgumentException e) {
             // The ray's head is on the axis
             v = ray.getHead().subtract(axis.getHead());

@@ -6,6 +6,7 @@ import primitives.Vector;
 
 import java.util.MissingResourceException;
 
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 public class Camera implements Cloneable {
@@ -17,9 +18,9 @@ public class Camera implements Cloneable {
     double _height = 0;
     double _width = 0;
     double distance = 0;
+    private Point viewPlanePC;
 
     public Point getLocation() {
-
         return Plocation;
     }
 
@@ -47,16 +48,6 @@ public class Camera implements Cloneable {
         return distance;
     }
 
-    public Camera setVPDistance(double distance) {
-        this.distance = distance;
-        return this;
-    }
-    public Camera setVPSize(double width, double height) {
-        _width = width;
-        _height = height;
-        return this;
-    }
-
 
     public Camera(Point location, Vector up, Vector to) {
         this.Plocation = location;
@@ -70,6 +61,16 @@ public class Camera implements Cloneable {
     }
 
     private Camera() {
+    }
+
+    public Camera setVPDistance(double distance) {
+        this.distance = distance;
+        return this;
+    }
+    public Camera setVPSize(double width, double height) {
+        _width = width;
+        _height = height;
+        return this;
     }
 
     //nX-sum of columns
@@ -98,7 +99,6 @@ public class Camera implements Cloneable {
     }
 
 
-
     public static Builder getBuilder() {
         return new Builder();
     }
@@ -108,8 +108,7 @@ public class Camera implements Cloneable {
     public static class Builder {
         final private Camera camera = new Camera();
 
-        public Builder() {
-        }
+        public Builder() {}
 
         public Builder setLocation(Point point_location) {
             if (point_location == null) {
@@ -120,12 +119,12 @@ public class Camera implements Cloneable {
         }
 
         public Builder setDirection(Vector to, Vector up) {
-            if (to == null || up == null) {
+            if (to == null || up == null && !isZero(to.dotProduct(up))) {
                 throw new IllegalArgumentException("Vectors cannot be null");
             }
             camera.to = to.normalize();
             camera.right = camera.to.crossProduct(up).normalize();
-            camera.up = camera.right.crossProduct(camera.to).normalize();
+            camera.up = up.normalize();
             return this;
         }
 
@@ -146,7 +145,7 @@ public class Camera implements Cloneable {
             return this;
         }
 
-        public Camera build() throws CloneNotSupportedException {
+        public Camera build()  {
             if (camera.Plocation == null) {
                 throw new MissingResourceException("Missing rendering data", Camera.class.getName(), "location");
             }
@@ -162,7 +161,13 @@ public class Camera implements Cloneable {
             if (camera.distance == 0.0) {
                 throw new MissingResourceException("Missing rendering data", Camera.class.getName(), "view plane distance");
             }
-            return (Camera) camera.clone();
+            camera.viewPlanePC = camera.Plocation.add(camera.to.scale(camera.distance));
+            try{
+                return (Camera) camera.clone();
+            }
+            catch (CloneNotSupportedException cloneExc) {
+                throw new RuntimeException(cloneExc);
+            }
         }
     }
 

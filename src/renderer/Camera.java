@@ -9,46 +9,91 @@ import java.util.MissingResourceException;
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
+/**
+ * The Camera class represents a camera in 3D space.
+ * It constructs rays through pixels on the view plane for rendering images.
+ */
 public class Camera implements Cloneable {
 
-    private Point Plocation ;
-    private Vector right ;
-    private Vector up ;
-    private Vector to ;
-    double _height = 0;
-    double _width = 0;
-    double distance = 0;
+    private Point Plocation;
+    private Vector right;
+    private Vector up;
+    private Vector to;
+    private double _height = 0;
+    private double _width = 0;
+    private double distance = 0;
     private Point viewPlanePC;
 
+    /**
+     * Gets the camera location.
+     *
+     * @return the camera location.
+     */
     public Point getLocation() {
         return Plocation;
     }
 
+    /**
+     * Gets the right direction vector of the camera.
+     *
+     * @return the right direction vector.
+     */
     public Vector getRight() {
         return right;
     }
 
+    /**
+     * Gets the up direction vector of the camera.
+     *
+     * @return the up direction vector.
+     */
     public Vector getUp() {
         return up;
     }
 
+    /**
+     * Gets the to direction vector of the camera.
+     *
+     * @return the to direction vector.
+     */
     public Vector getTo() {
         return to;
     }
 
+    /**
+     * Gets the view plane height.
+     *
+     * @return the view plane height.
+     */
     public double getHeight() {
         return _height;
     }
 
+    /**
+     * Gets the view plane width.
+     *
+     * @return the view plane width.
+     */
     public double getWidth() {
         return _width;
     }
 
+    /**
+     * Gets the distance between the camera and the view plane.
+     *
+     * @return the distance between the camera and the view plane.
+     */
     public double getDistance() {
         return distance;
     }
 
-
+    /**
+     * Constructs a Camera object with a given location, up vector, and to vector.
+     *
+     * @param location the location of the camera.
+     * @param up the up direction vector of the camera.
+     * @param to the to direction vector of the camera.
+     */
     public Camera(Point location, Vector up, Vector to) {
         this.Plocation = location;
 
@@ -60,23 +105,45 @@ public class Camera implements Cloneable {
         this.right = to.crossProduct(up);
     }
 
+    /**
+     * Default constructor for the Camera class.
+     */
     private Camera() {
     }
 
+    /**
+     * Sets the view plane distance.
+     *
+     * @param distance the distance between the camera and the view plane.
+     * @return the current Camera object.
+     */
     public Camera setVPDistance(double distance) {
         this.distance = distance;
         return this;
     }
+
+    /**
+     * Sets the view plane size.
+     *
+     * @param width the width of the view plane.
+     * @param height the height of the view plane.
+     * @return the current Camera object.
+     */
     public Camera setVPSize(double width, double height) {
         _width = width;
         _height = height;
         return this;
     }
 
-    //nX-sum of columns
-    //nY-sum of lines
-    //j-column in view plane
-    //i-line in view plane
+    /**
+     * Constructs a ray through a specific pixel on the view plane.
+     *
+     * @param nX the number of columns on the view plane.
+     * @param nY the number of rows on the view plane.
+     * @param j the column index of the pixel.
+     * @param i the row index of the pixel.
+     * @return the constructed Ray.
+     */
     public Ray constructRay(int nX, int nY, int j, int i) {
         double Rx = _width / nX;
         double Ry = _height / nY;
@@ -93,23 +160,37 @@ public class Camera implements Cloneable {
                 pIJ = pIJ.add(right.scale(xJ));
             if (!isZero(yI))
                 pIJ = pIJ.add(up.scale(yI));
-
         }
         return new Ray(Plocation, pIJ.subtract(Plocation));
     }
 
-
+    /**
+     * Creates a new Builder instance for constructing a Camera object.
+     *
+     * @return a new Builder instance.
+     */
     public static Builder getBuilder() {
         return new Builder();
     }
 
-
-
+    /**
+     * The Builder class for constructing Camera objects using the Builder design pattern.
+     */
     public static class Builder {
-        final private Camera camera = new Camera();
+        private final Camera camera = new Camera();
 
-        public Builder() {}
+        /**
+         * Default constructor for the Builder class.
+         */
+        public Builder() {
+        }
 
+        /**
+         * Sets the location of the Camera.
+         *
+         * @param point_location the location of the Camera.
+         * @return the current Builder instance.
+         */
         public Builder setLocation(Point point_location) {
             if (point_location == null) {
                 throw new IllegalArgumentException("Location cannot be null");
@@ -118,6 +199,13 @@ public class Camera implements Cloneable {
             return this;
         }
 
+        /**
+         * Sets the direction vectors of the Camera.
+         *
+         * @param to the to direction vector.
+         * @param up the up direction vector.
+         * @return the current Builder instance.
+         */
         public Builder setDirection(Vector to, Vector up) {
             if (to == null || up == null && !isZero(to.dotProduct(up))) {
                 throw new IllegalArgumentException("Vectors cannot be null");
@@ -128,6 +216,13 @@ public class Camera implements Cloneable {
             return this;
         }
 
+        /**
+         * Sets the size of the view plane.
+         *
+         * @param width the width of the view plane.
+         * @param height the height of the view plane.
+         * @return the current Builder instance.
+         */
         public Builder setVpSize(double width, double height) {
             if (width <= 0 || height <= 0) {
                 throw new IllegalArgumentException("Width and height must be positive");
@@ -137,6 +232,12 @@ public class Camera implements Cloneable {
             return this;
         }
 
+        /**
+         * Sets the distance between the Camera and the view plane.
+         *
+         * @param distance the distance between the Camera and the view plane.
+         * @return the current Builder instance.
+         */
         public Builder setVpDistance(double distance) {
             if (distance <= 0) {
                 throw new IllegalArgumentException("Distance must be positive");
@@ -145,7 +246,12 @@ public class Camera implements Cloneable {
             return this;
         }
 
-        public Camera build()  {
+        /**
+         * Builds and returns the Camera object.
+         *
+         * @return the constructed Camera object.
+         */
+        public Camera build() {
             if (camera.Plocation == null) {
                 throw new MissingResourceException("Missing rendering data", Camera.class.getName(), "location");
             }
@@ -162,13 +268,11 @@ public class Camera implements Cloneable {
                 throw new MissingResourceException("Missing rendering data", Camera.class.getName(), "view plane distance");
             }
             camera.viewPlanePC = camera.Plocation.add(camera.to.scale(camera.distance));
-            try{
+            try {
                 return (Camera) camera.clone();
-            }
-            catch (CloneNotSupportedException cloneExc) {
+            } catch (CloneNotSupportedException cloneExc) {
                 throw new RuntimeException(cloneExc);
             }
         }
     }
-
 }

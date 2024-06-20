@@ -25,8 +25,7 @@ class VectorTest {
         );
 
         // TC02: test ctor based on type Double3
-        assertDoesNotThrow(
-                () -> new Vector(new Double3(4, 5, 6)),
+        assertDoesNotThrow(() -> new Vector(new Double3(4, 5, 6)),
                 "Failed constructing a correct vector based on type Double3"
         );
 

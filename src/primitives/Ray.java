@@ -75,20 +75,23 @@ public class Ray {
         return head.add(direction.scale(t));
     }
 
+     public Point findClosestPoint(List<Point> pointList) {
+        if (pointList == null || pointList.isEmpty()) {
+            return null;
+        }
 
-    Point findClosestPoint(List<Point> pointList){
-        Point result= null;
-        double minDistance= Double.MIN_VALUE;
+        Point result = null;
+        double minDistance = Double.MAX_VALUE; // אתחול לערך הגדול ביותר האפשרי
         double ptDistance;
 
-        for (Point pt:pointList) {
-            ptDistance=head.distance(pt);
-            if(ptDistance<minDistance){
-                minDistance=ptDistance;
-                result=pt;
+        for (Point pt : pointList) {
+            ptDistance = head.distance(pt);
+            if (ptDistance < minDistance) {
+                minDistance = ptDistance;
+                result = pt;
             }
         }
         return result;
-
     }
+
 }

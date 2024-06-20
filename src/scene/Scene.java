@@ -1,6 +1,7 @@
 package scene;
 
 import geometries.Geometries;
+import geometries.Intersectable;
 import lighting.AmbientLight;
 import primitives.Color;
 
@@ -10,7 +11,7 @@ public class Scene {
     private  AmbientLight _ambientLight = AmbientLight.NONE;
     private  Geometries _geometries = new Geometries();
 
-    private Scene(String name){
+    public Scene(String name){
         _name = name;
     }
 
@@ -28,4 +29,21 @@ public class Scene {
         this._geometries = geometries;
         return this;
     }
+
+    public String getName() {
+        return _name;
+    }
+
+    public Color getBackground() {
+        return _background;
+    }
+
+    public AmbientLight getAmbientLight() {
+        return _ambientLight;
+    }
+
+    public Geometries getGeometries() {
+        return _geometries;
+    }
+
 }

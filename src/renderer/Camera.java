@@ -274,5 +274,9 @@ public class Camera implements Cloneable {
                 throw new RuntimeException(cloneExc);
             }
         }
+
+        public Builder setRayTracer(SimpleRayTracer simpleRayTracer) {
+            return null;
+        }
     }
 }

@@ -1,19 +1,29 @@
 package renderer;
 
 import primitives.Color;
+import primitives.Point;
 import primitives.Ray;
 import scene.Scene;
 
-public class SimpleRayTracer {
+import java.util.List;
 
-    protected  Scene scene;
+public class SimpleRayTracer extends RayTracerBase{
 
     public SimpleRayTracer(Scene scene) {
+        super(scene);
     }
 
-    public void RayTracerBase(Scene scene){
-        this.scene = scene;
+    public Color traceRay(Ray ray){
+        List<Point> intersections =this.scene.getGeometries().findIntersections(ray);
+        if(intersections == null || intersections.isEmpty()){
+            return this.scene.getBackground();
+        }
+        Point closestPoint = ray.findClosestPoint(intersections);
+        return calcColor(closestPoint);
     }
 
-    public abstract Color traceRay(Ray ray);
+    private Color calcColor(Point point) {
+        return scene.getAmbientLight().getIntensity();
+    }
+
 }

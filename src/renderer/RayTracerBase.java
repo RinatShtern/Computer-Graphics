@@ -7,23 +7,20 @@ import scene.Scene;
 
 import java.util.List;
 
-public abstract class RayTracerBase extends SimpleRayTracer{
-    protected RayTracerBase(Scene scene) {
-        super(scene);
+public abstract class RayTracerBase {
+    protected scene.Scene scene;
+
+    public RayTracerBase(Scene scene) {
+        this.scene = scene;
     }
 
-    @Override
-    public Color traceRay(Ray ray) {
-        Color result = scene.getBackground();
-        List<Point> allPoints = scene.getGeometries().findIntersections(ray);
-        if(allPoints != null){
-            Point pt = ray.findClosestPoint(allPoints);
-            result = calcColor(pt);
-        }
-        return result;
-    }
+    public abstract Color traceRay(Ray ray);
+//        Color result = scene.getBackground();
+//        List<Point> allPoints = scene.getGeometries().findIntersections(ray);
+//        if(allPoints != null){
+//            Point pt = ray.findClosestPoint(allPoints);
+//            result = calcColor(pt);
+//        }
+//        return result;
 
-    private Color calcColor(Point point) {
-        return scene.getAmbientLight().getIntensity();
-    }
 }

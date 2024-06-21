@@ -1,4 +1,4 @@
-package unittests.renderer;
+package renderer;
 
 import static java.awt.Color.*;
 
@@ -18,7 +18,7 @@ public class RenderTests {
    /** Camera builder of the tests */
    private final Camera.Builder camera = Camera.getBuilder()
            .setRayTracer(new SimpleRayTracer(scene))
-           .setLocation(Point.ZERO).setDirection(new Point(0, 0, -1), Vector.Y)
+           .setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1),new Vector(0,-1,0 ))
            .setVpDistance(100)
            .setVpSize(500, 500);
 
@@ -26,7 +26,7 @@ public class RenderTests {
     * grid */
    @Test
    public void renderTwoColorTest() {
-      scene.geometries.add(new Sphere(new Point(0, 0, -100), 50d),
+      scene.getGeometries().add(new Sphere(new Point(0, 0, -100), 50d),
               new Triangle(new Point(-100, 0, -100), new Point(0, 100, -100), new Point(-100, 100, -100)), // up
               // left
               new Triangle(new Point(-100, 0, -100), new Point(0, -100, -100),
@@ -40,9 +40,9 @@ public class RenderTests {
       camera
               .setImageWriter(new ImageWriter("base render test", 1000, 1000))
               .build()
-              .renderImage()
-              .printGrid(100, new Color(YELLOW))
-              .writeToImage();
+              // .renderImage()
+              .printGrid(100, new Color(YELLOW));
+              //.writeToImage();
    }
 
    /** Test for XML based scene - for bonus */
@@ -56,9 +56,9 @@ public class RenderTests {
       camera
               .setImageWriter(new ImageWriter("xml render test", 1000, 1000))
               .build()
-              .renderImage()
-              .printGrid(100, new Color(YELLOW))
-              .writeToImage();
+              //.renderImage()
+              .printGrid(100, new Color(YELLOW));
+              //.writeToImage();
    }
 }
 

@@ -1,5 +1,6 @@
 package renderer;
 
+import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -24,6 +25,9 @@ public class Camera implements Cloneable {
     private double distance = 0;
     private Point viewPlanePC;
 
+
+    private ImageWriter imageWriter;
+    private  RayTracerBase  rayTracer;
     /**
      * Gets the camera location.
      *
@@ -173,6 +177,58 @@ public class Camera implements Cloneable {
         return new Builder();
     }
 
+    private void castRay(int nX, int nY, int j, int i) {
+        Ray ray = constructRay(nX, nY, j, i);
+        Color color = rayTracer.traceRay(ray);
+        imageWriter.writePixel(j, i, color);
+    }
+//should use cast ray
+    public void renderImage() {
+//        if(Plocation==null||up==null|| to==null|| right==null||
+//                distance==0.0 || _width==0.0|| _height==0.0) {
+//            // throw new Exception("MissingResourcesException");
+//
+//        }
+        int nX = 800;
+        int nY = 500;
+
+        int interval = 50; // 800/50 == 16  500/50 == 10
+
+        Color redColor = new Color(255d,0,0d);
+
+        ImageWriter imageWriter = new ImageWriter("YellowSubmarine",nX,nY);
+        for (int i = 0; i < nX; i++) {
+            for (int j = 0; j < nY; j++) {
+                if(i % interval == 0 || j % interval == 0) {
+                    imageWriter.writePixel(i, j, redColor);
+                }
+            }
+        }
+        imageWriter.writeToImage();
+    }
+    public void printGrid(int interval, Color color) {
+        int nX = 800;
+        int nY = 500;
+
+         //int interval = 50;
+
+        Color redColor = new Color(255d,0,0d);
+
+        ImageWriter imageWriter = new ImageWriter("YellowSubmarine",nX,nY);
+        for (int i = 0; i < nX; i++) {
+            for (int j = 0; j < nY; j++) {
+                if(i % interval == 0 || j % interval == 0) {
+                    imageWriter.writePixel(i, j, redColor);
+                }
+            }
+        }
+        imageWriter.writeToImage();
+    }
+    public void writeToImage() {
+        this.imageWriter.writeToImage();
+    }
+
+    /////////////////////////
     /**
      * The Builder class for constructing Camera objects using the Builder design pattern.
      */
@@ -267,6 +323,12 @@ public class Camera implements Cloneable {
             if (camera.distance == 0.0) {
                 throw new MissingResourceException("Missing rendering data", Camera.class.getName(), "view plane distance");
             }
+            if (camera.imageWriter == null) {
+                throw new MissingResourceException("Missing rendering data", Camera.class.getName(), "imageWriter");
+            }
+            if (camera.rayTracer == null) {
+                throw new MissingResourceException("Missing rendering data", Camera.class.getName(), "rayTracer");
+            }
             camera.viewPlanePC = camera.Plocation.add(camera.to.scale(camera.distance));
             try {
                 return (Camera) camera.clone();
@@ -274,9 +336,16 @@ public class Camera implements Cloneable {
                 throw new RuntimeException(cloneExc);
             }
         }
-
         public Builder setRayTracer(SimpleRayTracer simpleRayTracer) {
-            return null;
+            camera.rayTracer= simpleRayTracer;
+            return this;
         }
+
+        public Builder setImageWriter(ImageWriter base_render_test) {
+            camera.imageWriter= base_render_test;
+            return this;
+        }
+
+
     }
 }

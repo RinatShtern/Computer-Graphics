@@ -66,16 +66,35 @@ public class Ray {
         return result;
     }
 
+
+    /**
+     * Retrieves the direction vector of the ray.
+     *
+     * @return the direction vector of the ray
+     */
     public Vector getDirection() {
         return direction;
     }
+
+    /**
+     * Retrieves the starting point of the ray.
+     *
+     * @return the starting point of the ray
+     */
     public Point getHead() {
         return head;
     }
 
-    public Point getPoint(double t){
-        if(t==0)
+    /**
+     * Calculates a point on the ray at a given distance from the head.
+     *
+     * @param t the distance from the head
+     * @return the point on the ray at the given distance
+     */
+    public Point getPoint(double t) {
+        if (t == 0) {
             return head;
+        }
         return head.add(direction.scale(t));
     }
 
@@ -105,6 +124,16 @@ public Point findClosestPoint(List<Point> points) {
             .toList())
             .point;
 }
+    /**
+     * Finds the closest point on the ray to the head from a list of points.
+     *
+     * @param pointList the list of points to check
+     * @return the closest point to the head, or null if the list is null or empty
+     */
+    public Point findClosestPoint(List<Point> pointList) {
+        if (pointList == null || pointList.isEmpty()) {
+            return null;
+        }
 
     public Intersectable.GeoPoint findClosestGeoPoint(List<GeoPoint> geoPoints) {
 

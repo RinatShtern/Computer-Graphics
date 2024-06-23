@@ -8,8 +8,17 @@ import geometries.Intersectable.GeoPoint;
 
 import java.util.List;
 
-public class SimpleRayTracer extends RayTracerBase{
+/**
+ * The SimpleRayTracer class is responsible for tracing rays and calculating the color
+ * at the intersection points in the scene.
+ */
+public class SimpleRayTracer extends RayTracerBase {
 
+    /**
+     * Constructs a SimpleRayTracer with the given scene.
+     *
+     * @param scene the scene to be used for ray tracing
+     */
     public SimpleRayTracer(Scene scene) {
         super(scene);
     }

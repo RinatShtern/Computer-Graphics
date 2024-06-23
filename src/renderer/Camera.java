@@ -25,9 +25,9 @@ public class Camera implements Cloneable {
     private double distance = 0;
     private Point viewPlanePC;
 
-
     private ImageWriter imageWriter;
-    private  RayTracerBase  rayTracer;
+    private RayTracerBase rayTracer;
+
     /**
      * Gets the camera location.
      *
@@ -177,26 +177,24 @@ public class Camera implements Cloneable {
         return new Builder();
     }
 
-    private Color castRay( int j, int i) {
-//        Ray ray = constructRay(nX, nY, j, i);
-//        Color color = rayTracer.traceRay(ray);
-//        if (color == null) {
-//            color = new Color(0, 0, 0);
-//        }
-//        imageWriter.writePixel(j, i, color);
+    /**
+     * Casts a ray through a specific pixel and traces it to get the color at the intersection point.
+     *
+     * @param j the column index of the pixel.
+     * @param i the row index of the pixel.
+     * @return the color at the intersection point.
+     */
+    private Color castRay(int j, int i) {
         return rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
-
     }
 
-    public void renderImage() {
-//        int nX = imageWriter.getNx();
-//        int nY = imageWriter.getNy();
-//        for (int i = 0; i < nX; i++) {
-//            for (int j = 0; j < nY; j++) {
-//                castRay(nX, nY, j, i);
-//            }
-//        }
-//        return this;
+    /**
+     * Renders an image by casting rays through all the pixels on the view plane.
+     *
+     * @return the current Camera object.
+     */
+    public Camera renderImage() {
+
         if (this.imageWriter == null)
             throw new UnsupportedOperationException("Missing imageWriter");
         if (this.rayTracer == null)
@@ -210,20 +208,17 @@ public class Camera implements Cloneable {
                 this.imageWriter.writePixel(j, i, color);
             }
         }
+        return this;
     }
-    public void printGrid(int interval, Color color) {
-//        int nX = 800;
-//        int nY = 500;
-//
-//        ImageWriter imageWriter = new ImageWriter("YellowSubmarine",nX,nY);
-//        for (int i = 0; i < nX; i++) {
-//            for (int j = 0; j < nY; j++) {
-//                if(i % interval == 0 || j % interval == 0) {
-//                    imageWriter.writePixel(i, j, color);
-//                }
-//            }
-//        }
-//       return this;
+
+    /**
+     * Prints a grid on the image.
+     *
+     * @param interval the interval between grid lines.
+     * @param color the color of the grid lines.
+     * @return the current Camera object.
+     */
+    public Camera printGrid(int interval, Color color) {
         for (int i = 0; i < imageWriter.getNx(); i++) {
             for (int j = 0; j < imageWriter.getNy(); j++) {
                 // Write the grid line color to the pixel
@@ -232,8 +227,12 @@ public class Camera implements Cloneable {
                 }
             }
         }
-
+        return this;
     }
+
+    /**
+     * Writes the rendered image to a file.
+     */
     public void writeToImage() {
         this.imageWriter.writeToImage();
     }
@@ -345,16 +344,27 @@ public class Camera implements Cloneable {
                 throw new RuntimeException(cloneExc);
             }
         }
+
+        /**
+         * Sets the RayTracer for the Camera.
+         *
+         * @param simpleRayTracer the RayTracer object.
+         * @return the current Builder instance.
+         */
         public Builder setRayTracer(SimpleRayTracer simpleRayTracer) {
-            camera.rayTracer= simpleRayTracer;
+            camera.rayTracer = simpleRayTracer;
             return this;
         }
 
+        /**
+         * Sets the ImageWriter for the Camera.
+         *
+         * @param base_render_test the ImageWriter object.
+         * @return the current Builder instance.
+         */
         public Builder setImageWriter(ImageWriter base_render_test) {
-            camera.imageWriter= base_render_test;
+            camera.imageWriter = base_render_test;
             return this;
         }
-
-
     }
 }

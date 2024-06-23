@@ -41,10 +41,10 @@ public class RenderTests {
 
               .setImageWriter(new ImageWriter("base render test", 1000, 1000))
               .build()
-              .renderImage();
-      camera.build()
-              .printGrid(100, new Color(YELLOW));
-      camera.build()
+              .renderImage()//;
+      // camera.build()
+              .printGrid(100, new Color(YELLOW))//;
+      //camera.build()
               .writeToImage();
    }
 

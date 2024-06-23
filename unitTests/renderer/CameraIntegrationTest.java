@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import geometries.*;
 import primitives.*;
+import scene.Scene;
 
 import java.util.List;
 
@@ -20,6 +21,8 @@ class CameraRayIntersectionsIntegrationTests {
      * Builder for the first camera configuration.
      */
     private final Camera.Builder camera1Builder = Camera.getBuilder()
+            .setRayTracer(new SimpleRayTracer(new Scene("Test")))
+            .setImageWriter(new ImageWriter("Test", 1, 1))
             .setLocation(Point.ZERO)
             .setDirection(new Vector(0,0,-1), new Vector(0,1,0))
             .setVpSize(3,3)
@@ -29,6 +32,8 @@ class CameraRayIntersectionsIntegrationTests {
      * Builder for the second camera configuration.
      */
     private final Camera.Builder camera2Builder = Camera.getBuilder()
+            .setRayTracer(new SimpleRayTracer(new Scene("Test")))
+            .setImageWriter(new ImageWriter("Test", 1, 1))
             .setLocation(new Point(0,0,0.5))
             .setDirection(new Vector(0,0,-1), new Vector(0,1,0))
             .setVpSize(3,3)

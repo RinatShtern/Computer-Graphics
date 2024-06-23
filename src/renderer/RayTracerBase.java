@@ -15,12 +15,5 @@ public abstract class RayTracerBase {
     }
 
     public abstract Color traceRay(Ray ray);
-//        Color result = scene.getBackground();
-//        List<Point> allPoints = scene.getGeometries().findIntersections(ray);
-//        if(allPoints != null){
-//            Point pt = ray.findClosestPoint(allPoints);
-//            result = calcColor(pt);
-//        }
-//        return result;
 
 }

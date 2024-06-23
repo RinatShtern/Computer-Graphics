@@ -180,55 +180,40 @@ public class Camera implements Cloneable {
     private void castRay(int nX, int nY, int j, int i) {
         Ray ray = constructRay(nX, nY, j, i);
         Color color = rayTracer.traceRay(ray);
+        if (color == null) {
+            color = new Color(0, 0, 0);
+        }
         imageWriter.writePixel(j, i, color);
     }
-//should use cast ray
-    public void renderImage() {
-//        if(Plocation==null||up==null|| to==null|| right==null||
-//                distance==0.0 || _width==0.0|| _height==0.0) {
-//            // throw new Exception("MissingResourcesException");
-//
-//        }
-        int nX = 800;
-        int nY = 500;
 
-        int interval = 50; // 800/50 == 16  500/50 == 10
-
-        Color redColor = new Color(255d,0,0d);
-
-        ImageWriter imageWriter = new ImageWriter("YellowSubmarine",nX,nY);
+    public Camera renderImage() {
+        int nX = imageWriter.getNx();
+        int nY = imageWriter.getNy();
         for (int i = 0; i < nX; i++) {
             for (int j = 0; j < nY; j++) {
-                if(i % interval == 0 || j % interval == 0) {
-                    imageWriter.writePixel(i, j, redColor);
-                }
+                castRay(nX, nY, j, i);
             }
         }
-        imageWriter.writeToImage();
+        return this;
     }
-    public void printGrid(int interval, Color color) {
+    public Camera printGrid(int interval, Color color) {
         int nX = 800;
         int nY = 500;
-
-         //int interval = 50;
-
-        Color redColor = new Color(255d,0,0d);
 
         ImageWriter imageWriter = new ImageWriter("YellowSubmarine",nX,nY);
         for (int i = 0; i < nX; i++) {
             for (int j = 0; j < nY; j++) {
                 if(i % interval == 0 || j % interval == 0) {
-                    imageWriter.writePixel(i, j, redColor);
+                    imageWriter.writePixel(i, j, color);
                 }
             }
         }
-        imageWriter.writeToImage();
+       return this;
     }
     public void writeToImage() {
         this.imageWriter.writeToImage();
     }
 
-    /////////////////////////
     /**
      * The Builder class for constructing Camera objects using the Builder design pattern.
      */

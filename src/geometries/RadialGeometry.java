@@ -21,5 +21,4 @@ public abstract class RadialGeometry extends Geometry {
         this.radius = radius;
     }
 
-    public abstract List<Point> findIntersections(Ray ray);
 }

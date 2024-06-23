@@ -41,12 +41,52 @@ public class RenderTests {
 
               .setImageWriter(new ImageWriter("base render test", 1000, 1000))
               .build()
-              .renderImage()//;
-      // camera.build()
-              .printGrid(100, new Color(YELLOW))//;
-      //camera.build()
+              .renderImage()
+              .printGrid(100, new Color(YELLOW))
+              .writeToImage();
+   }
+   // For stage 6 - please disregard in stage 5
+   /**
+    * Produce a scene with basic 3D model - including individual lights of the
+    * bodies and render it into a png image with a grid
+    */
+   @Test
+   public void renderMultiColorTest() {
+      scene._geometries.add( // center
+              new Sphere(new Point(0, 0, -100), 50),
+              // up left
+              new Triangle(new Point(-100, 0, -100), new Point(0, 100, -100), new Point(-100, 100, -100))
+                      .setEmission(new Color(GREEN)),
+              // down left
+              new Triangle(new Point(-100, 0, -100), new Point(0, -100, -100), new Point(-100, -100, -100))
+                      .setEmission(new Color(RED)),
+              // down right
+              new Triangle(new Point(100, 0, -100), new Point(0, -100, -100), new Point(100, -100, -100))
+                      .setEmission(new Color(BLUE)));
+      scene.setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.2, 0.2, 0.2))); //
+
+      camera
+              .setImageWriter(new ImageWriter("color render test", 1000, 1000))
+              .build()
+              .renderImage()
+              .printGrid(100, new Color(WHITE))
               .writeToImage();
    }
 
+   /** Test for XML based scene - for bonus */
+   @Test
+   public void basicRenderXml() {
+      // enter XML file name and parse from XML file into scene object
+      // using the code you added in appropriate packages
+      // ...
+      // NB: unit tests is not the correct place to put XML parsing code
+
+      camera
+              .setImageWriter(new ImageWriter("xml render test", 1000, 1000))
+              .build()
+              .renderImage()
+              .printGrid(100, new Color(YELLOW))
+              .writeToImage();
+   }
 }
 

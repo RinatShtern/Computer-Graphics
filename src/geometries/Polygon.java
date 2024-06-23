@@ -97,28 +97,66 @@ public class Polygon extends Geometry {
 
     @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double distance) {
-        // Find intersections with the plane
-        List<GeoPoint> planeIntersections = plane.findGeoIntersectionsHelper(ray,distance);
+
+       var planeIntersections = plane.findGeoIntersectionsHelper(ray, distance);
         if (planeIntersections == null) return null;
 
-        for(int i =1 ;i<size -1;i++)
-        {
-            for(int j =i+1;j<size-1;j++)
-            {
-                Vector v1 = vertices.get(0).subtract(ray.getHead());
-                Vector v2 = vertices.get(i).subtract(ray.getHead());
-                Vector v3 =vertices.get(0).subtract(ray.getHead());
-                Vector direction = ray.getDirection();
+        Point rayHead  = ray.getHead();
+        Vector rayDirection = ray.getDirection();
 
-                double dot1=alignZero(direction.dotProduct(v1.crossProduct(v2).normalize()));
-                double dot2=alignZero(direction.dotProduct(v2.crossProduct(v3).normalize()));
-                double dot3=alignZero(direction.dotProduct(v3.crossProduct(v1).normalize()));
+        Vector[] v = new Vector[size];
+        Vector[] n = new Vector[size];
+        double[] s = new double[size];
 
-                if((dot1 > 0 && dot2 > 0 && dot3 > 0)||(dot1 < 0 && dot2 < 0 && dot3 < 0))
-                    return planeIntersections;
-            }
+        for (var i = 0; i < size; ++i) {
+            v[i] = vertices.get(i).subtract(rayHead);
         }
-        return null;
+
+        for (var i = 0; i < size; ++i) {
+            n[i] = v[i].crossProduct(v[(i + 1) % size]).normalize();
+        }
+
+        for (var i = 0; i < size; ++i) {
+            s[i] = alignZero(n[i].dotProduct(rayDirection));
+        }
+
+        if(s[0]<0){
+            for (var i = 1; i < size; ++i)
+                if(s[i]>=0)
+                    return null;
+            return List.of(new GeoPoint(this,planeIntersections.get(0).point));
+        }
+            else if(s[0]>0) {
+            for (var i = 1; i < size; ++i)
+                if (s[i] <= 0)
+                    return null;
+            return planeIntersections;
+        }
+            return null;
+        }
+}
+
+
+//        for (int i = 1; i < size - 1; i++) {
+//            for (int j = i + 1; j < size - 1; j++) {
+//                Vector v1 = vertices.get(0).subtract(ray.getHead());
+//                Vector v2 = vertices.get(i).subtract(ray.getHead());
+//                Vector v3 = vertices.get(0).subtract(ray.getHead());
+//                Vector direction = ray.getDirection();
+//
+//                double dot1 = alignZero(direction.dotProduct(v1.crossProduct(v2).normalize()));
+//                double dot2 = alignZero(direction.dotProduct(v2.crossProduct(v3).normalize()));
+//                double dot3 = alignZero(direction.dotProduct(v3.crossProduct(v1).normalize()));
+//
+//                if ((dot1 > 0 && dot2 > 0 && dot3 > 0) || (dot1 < 0 && dot2 < 0 && dot3 < 0))
+//                    return planeIntersections;
+//            }
+//        }
+//        return null;
+
+
+
+
 //        GeoPoint p = planeIntersections.getFirst();
 //
 //        // Check if the point is inside the polygon
@@ -140,6 +178,6 @@ public class Polygon extends Geometry {
 //        }
 //
 //        return planeIntersections;
-    }
+//    }
 
-}
+

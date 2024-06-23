@@ -54,7 +54,7 @@ public class Tube extends RadialGeometry {
 
     }
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double distance) {
         // Calculate the projection of the ray's head onto the tube's axis
         double t = axis.getDirection().dotProduct(ray.getDirection());
         Vector v;
@@ -78,14 +78,15 @@ public class Tube extends RadialGeometry {
         } else if (isZero(discriminant)) {
             // One intersection
             double t1 = -b / (2 * a);
-            return List.of(ray.getPoint(t1));
+            return List.of(new GeoPoint(this,ray.getPoint(t1)));
         } else {
             // Two intersections
             double sqrtDiscriminant = Math.sqrt(discriminant);
             double t1 = (-b + sqrtDiscriminant) / (2 * a);
             double t2 = (-b - sqrtDiscriminant) / (2 * a);
-            return List.of(ray.getPoint(t1), ray.getPoint(t2));
+            return List.of(new GeoPoint(this,ray.getPoint(t1)), new GeoPoint(this,ray.getPoint(t2)));
         }
     }
+
 
 }

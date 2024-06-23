@@ -39,14 +39,16 @@ public class Sphere extends Geometry {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
         Point p0 = ray.getHead();
         Vector v = ray.getDirection();
         Point center = this.center;
         double radius = this.radius;
 
         if(p0.equals(center)) {
-            return List.of(center.add(v.scale(radius)));
+            //return List.of(center.add(v.scale(radius)));
+            return List.of(new GeoPoint(this, ray.getPoint(radius)));
+
         }
 
         Vector u = center.subtract(p0);
@@ -75,22 +77,22 @@ public class Sphere extends Geometry {
             Point p1 = ray.getPoint(t1);
             Point p2 = ray.getPoint(t2);
             if (p0.distance(p1) < p0.distance(p2))
-                return List.of(p1, p2);
+                //return List.of(p1, p2);
 
-            return List.of(p2, p1);
+                return List.of(new GeoPoint(this,p2), new GeoPoint(this,p1));
         }
 
         // if only t1 > 0, return one intersection
         if (t1 > 0) {
 //            Point p1 = p0.add(v.scale(t1));
 //            return List.of(p1);
-            return List.of(ray.getPoint(t1));
+            return List.of(new GeoPoint(this,ray.getPoint(t1)));
         }
 
         // if only t2 > 0, return one intersection
 //        Point p2 = p0.add(v.scale(t2));
 //        return List.of(p2);
-        return List.of(ray.getPoint(t2));
+        return List.of(new GeoPoint(this,ray.getPoint(t2)));
 
     }
 

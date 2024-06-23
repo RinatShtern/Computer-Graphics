@@ -16,8 +16,8 @@ public class Triangle extends Polygon {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        List<Point> intersec = plane.findIntersections(ray);
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
+        List<GeoPoint> intersec = plane.findGeoIntersections(ray);
         if (intersec == null){
             return null;
         }

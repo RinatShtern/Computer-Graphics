@@ -20,9 +20,7 @@ public abstract class Geometry extends Intersectable
      * @param p the point on the geometry
      * @return the normal vector to the geometry at the specified point
      */
-   abstract Vector getNormal(Point p);
-
-   abstract List<Point> findIntersections(Ray ray);
+   public abstract Vector getNormal(Point p);
 
     public Color getEmission() {
         return emission;

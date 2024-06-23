@@ -116,27 +116,12 @@ public class Ray {
 //        }
 //        return result;
 //    }
-public Point findClosestPoint(List<Point> points) {
-    return points == null || points.isEmpty() ? null
-            : findClosestGeoPoint(points
-            .stream()
-            .map(p -> new Intersectable.GeoPoint(null, p))
-            .toList())
-            .point;
-}
-    /**
-     * Finds the closest point on the ray to the head from a list of points.
-     *
-     * @param pointList the list of points to check
-     * @return the closest point to the head, or null if the list is null or empty
-     */
-    public Point findClosestPoint(List<Point> pointList) {
-        if (pointList == null || pointList.isEmpty()) {
+
+
+    public GeoPoint findClosestGeoPoint(List<GeoPoint> geoPoints) {
+        if (geoPoints == null || geoPoints.isEmpty()) {
             return null;
         }
-
-    public Intersectable.GeoPoint findClosestGeoPoint(List<GeoPoint> geoPoints) {
-
         GeoPoint closeGeoPoint = null;
         double minDistance = Double.MAX_VALUE;
         double ptDistance;
@@ -151,6 +136,15 @@ public Point findClosestPoint(List<Point> points) {
                 }
             }
         }
-            return closeGeoPoint;
+        return closeGeoPoint;
         }
+
+
+    public Point findClosestPoint(List<Point> points) {
+        return points == null || points.isEmpty() ? null
+                : findClosestGeoPoint(points.stream()
+                .map(p -> new Intersectable.GeoPoint(null, p))
+                .toList())
+                .point;
     }
+}

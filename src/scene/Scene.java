@@ -6,10 +6,10 @@ import lighting.AmbientLight;
 import primitives.Color;
 
 public class Scene {
-    private  String _name;
-    private Color _background;
-    private  AmbientLight _ambientLight = AmbientLight.NONE;
-    private  Geometries _geometries = new Geometries();
+    public   String _name;
+    public Color _background;
+    public  AmbientLight _ambientLight = AmbientLight.NONE;
+    public  Geometries _geometries = new Geometries();
 
     public Scene(String name){
         _name = name;

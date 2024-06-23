@@ -14,7 +14,7 @@ import static primitives.Util.isZero;
  * Represents a plane geometry in the 3D space.
  * A plane is defined by a point in the plane and a normal vector to the plane.
  */
-public class Plane implements Geometry {
+public class Plane extends Geometry {
     private final Point q; // A point on the plane
     private final Vector normal; // The normal vector to the plane
 
@@ -65,7 +65,7 @@ public class Plane implements Geometry {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double distance) {
         Point p0 = ray.getHead();
         Vector v = ray.getDirection();
         Vector n = normal;
@@ -84,7 +84,7 @@ public class Plane implements Geometry {
                 return null;
             } else {
                 // If the direction vector is not zero, return the starting point
-                return List.of(p0);
+                return List.of(new GeoPoint(this,ray.getHead()));
             }
         }
 
@@ -100,9 +100,7 @@ public class Plane implements Geometry {
 
         // if (t < 0) the direction of the ray points in the opposite direction
         if (t > 0) {
-          //  Point P = p0.add(v.scale(t));
-            Point P = ray.getPoint(t); // Using getPoint to find the intersection point
-            return List.of(P);
+            return List.of(new GeoPoint(this,ray.getPoint(t)));
         }
         return null;
     }

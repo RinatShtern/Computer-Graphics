@@ -1,5 +1,9 @@
 package primitives;
 
+import geometries.Intersectable;
+
+import geometries.Intersectable.GeoPoint;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -75,23 +79,49 @@ public class Ray {
         return head.add(direction.scale(t));
     }
 
-     public Point findClosestPoint(List<Point> pointList) {
-        if (pointList == null || pointList.isEmpty()) {
-            return null;
-        }
+//     public Point findClosestPoint(List<Point> pointList) {
+//        if (pointList == null || pointList.isEmpty()) {
+//            return null;
+//        }
+//
+//        Point result = null;
+//        double minDistance = Double.MAX_VALUE; // אתחול לערך הגדול ביותר האפשרי
+//        double ptDistance;
+//
+//        for (Point pt : pointList) {
+//            ptDistance = head.distance(pt);
+//            if (ptDistance < minDistance) {
+//                minDistance = ptDistance;
+//                result = pt;
+//            }
+//        }
+//        return result;
+//    }
+public Point findClosestPoint(List<Point> points) {
+    return points == null || points.isEmpty() ? null
+            : findClosestGeoPoint(points
+            .stream()
+            .map(p -> new Intersectable.GeoPoint(null, p))
+            .toList())
+            .point;
+}
 
-        Point result = null;
-        double minDistance = Double.MAX_VALUE; // אתחול לערך הגדול ביותר האפשרי
+    public Intersectable.GeoPoint findClosestGeoPoint(List<GeoPoint> geoPoints) {
+
+        GeoPoint closeGeoPoint = null;
+        double minDistance = Double.MAX_VALUE;
         double ptDistance;
+        if (!geoPoints.isEmpty()) {
 
-        for (Point pt : pointList) {
-            ptDistance = head.distance(pt);
-            if (ptDistance < minDistance) {
-                minDistance = ptDistance;
-                result = pt;
+
+            for (var pt : geoPoints) {
+                ptDistance = head.distance(pt.point);
+                if (ptDistance < minDistance) {
+                    minDistance = ptDistance;
+                    closeGeoPoint = pt;
+                }
             }
         }
-        return result;
+            return closeGeoPoint;
+        }
     }
-
-}

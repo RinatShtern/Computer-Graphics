@@ -12,7 +12,7 @@ import static primitives.Util.alignZero;
  * Represents a sphere geometry in 3D space.
  * A sphere is defined by its radius and center point.
  */
-public class Sphere implements Geometry {
+public class Sphere extends Geometry {
     private final Point center; // The center point of the sphere
     private final double radius;
 

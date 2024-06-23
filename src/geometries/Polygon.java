@@ -15,7 +15,7 @@ import primitives.Vector;
  *
  * @author Dan
  */
-public class Polygon implements Geometry {
+public class Polygon extends Geometry {
     /**
      * List of polygon's vertices
      */
@@ -96,32 +96,50 @@ public class Polygon implements Geometry {
 
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double distance) {
         // Find intersections with the plane
-        List<Point> planeIntersections = plane.findIntersections(ray);
+        List<GeoPoint> planeIntersections = plane.findGeoIntersectionsHelper(ray,distance);
         if (planeIntersections == null) return null;
 
-        Point p = planeIntersections.getFirst();
+        for(int i =1 ;i<size -1;i++)
+        {
+            for(int j =i+1;j<size-1;j++)
+            {
+                Vector v1 = vertices.get(0).subtract(ray.getHead());
+                Vector v2 = vertices.get(i).subtract(ray.getHead());
+                Vector v3 =vertices.get(0).subtract(ray.getHead());
+                Vector direction = ray.getDirection();
 
-        // Check if the point is inside the polygon
-        Vector v1 = vertices.getLast().subtract(p);
-        Vector v2 = vertices.getFirst().subtract(p);
-        Vector n = v1.crossProduct(v2).normalize();
-        double sign = alignZero(ray.getDirection().dotProduct(n));
-        if (isZero(sign)) return null;
+                double dot1=alignZero(direction.dotProduct(v1.crossProduct(v2).normalize()));
+                double dot2=alignZero(direction.dotProduct(v2.crossProduct(v3).normalize()));
+                double dot3=alignZero(direction.dotProduct(v3.crossProduct(v1).normalize()));
 
-        boolean positive = sign > 0;
-
-        for (int i = 1; i < vertices.size(); ++i) {
-            v1 = v2;
-            v2 = vertices.get(i).subtract(p);
-            n = v1.crossProduct(v2).normalize();
-            sign = alignZero(ray.getDirection().dotProduct(n));
-            if (isZero(sign)) return null;
-            if (positive != (sign > 0)) return null;
+                if((dot1 > 0 && dot2 > 0 && dot3 > 0)||(dot1 < 0 && dot2 < 0 && dot3 < 0))
+                    return planeIntersections;
+            }
         }
-
-        return planeIntersections;
+        return null;
+//        GeoPoint p = planeIntersections.getFirst();
+//
+//        // Check if the point is inside the polygon
+//        Vector v1 = vertices.getLast().subtract(p);
+//        Vector v2 = vertices.getFirst().subtract(p);
+//        Vector n = v1.crossProduct(v2).normalize();
+//        double sign = alignZero(ray.getDirection().dotProduct(n));
+//        if (isZero(sign)) return null;
+//
+//        boolean positive = sign > 0;
+//
+//        for (int i = 1; i < vertices.size(); ++i) {
+//            v1 = v2;
+//            v2 = vertices.get(i).subtract(p);
+//            n = v1.crossProduct(v2).normalize();
+//            sign = alignZero(ray.getDirection().dotProduct(n));
+//            if (isZero(sign)) return null;
+//            if (positive != (sign > 0)) return null;
+//        }
+//
+//        return planeIntersections;
     }
 
 }

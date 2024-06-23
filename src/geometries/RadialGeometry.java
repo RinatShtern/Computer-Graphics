@@ -9,7 +9,7 @@ import java.util.List;
  * Abstract class representing radial geometries in the geometry system.
  * Radial geometries are geometries defined by a single radius parameter.
  */
-public abstract class RadialGeometry implements Geometry {
+public abstract class RadialGeometry extends Geometry {
     protected final double radius; // The radius of the radial geometry
 
     /**

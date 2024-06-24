@@ -149,8 +149,8 @@ public class Camera implements Cloneable {
      * @return the constructed Ray.
      */
     public Ray constructRay(int nX, int nY, int j, int i) {
-        double Rx = _width / nX;
-        double Ry = _height / nY;
+        double Rx = (double)_width / nX;
+        double Ry = (double)_height / nY;
 
         Point pIJ = Plocation.add(to.scale(distance));
 
@@ -241,7 +241,8 @@ public class Camera implements Cloneable {
      * The Builder class for constructing Camera objects using the Builder design pattern.
      */
     public static class Builder {
-        private final Camera camera = new Camera();
+
+        private Camera camera = new Camera();
 
         /**
          * Default constructor for the Builder class.
@@ -275,7 +276,7 @@ public class Camera implements Cloneable {
                 throw new IllegalArgumentException("Vectors cannot be null");
             }
             camera.to = to.normalize();
-            camera.right = camera.to.crossProduct(up).normalize();
+            // camera.right = camera.to.crossProduct(up).normalize();
             camera.up = up.normalize();
             return this;
         }
@@ -366,5 +367,13 @@ public class Camera implements Cloneable {
             camera.imageWriter = base_render_test;
             return this;
         }
+
+        public Builder setDirection(Point inFront, Vector up) {
+            camera.to = inFront.subtract(camera.Plocation).normalize();
+            camera.up = up.normalize();
+            camera.right= camera.to.crossProduct(camera.up).normalize();
+            return this;
+        }
     }
+
 }

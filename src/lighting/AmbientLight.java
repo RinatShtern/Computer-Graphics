@@ -1,32 +1,28 @@
+
 package lighting;
+
 import primitives.Color;
 import primitives.Double3;
+
 /**
  * class AmbientLight extends of light to show the ambient light of the scene
  * the light have color
  */
-public class AmbientLight {
-
-    private final Color intensity;  // light intensity as a Color
-    public static final AmbientLight NONE = new AmbientLight(Color.BLACK, 0.0);
-    /**
-     * primary constructor
-     * @param Ia basic illumination
-     * @param Ka attenuation factor
-     */
-    public AmbientLight(Color Ia , Double3 Ka){
-        intensity = Ia.scale(Ka);
-    }
-
-    public AmbientLight(Color Ia , double Ka){
-        intensity = Ia.scale(Ka);
-    }
+public class AmbientLight extends Light {
+    public static final AmbientLight NONE = new AmbientLight(Color.BLACK, Double3.ZERO);
 
     /**
-     * getter for intensity
-     * @return the actual intensity
+     * Constructs an AmbientLight object with the given color and intensity coefficient.
+     *
+     * @param Ia the color of the ambient light
+     * @param Ka the intensity coefficient as a double
      */
-    public Color getIntensity() {
-        return intensity;
+    public AmbientLight(Color Ia, Double3 Ka) {
+        super(Ia.scale(Ka));
     }
+
+    public AmbientLight(Color Ia, double Ka) {
+        super(Ia.scale(Ka));
+    }
+
 }

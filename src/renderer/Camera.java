@@ -149,25 +149,24 @@ public class Camera implements Cloneable {
      * @return the constructed Ray.
      */
     public Ray constructRay(int nX, int nY, int j, int i) {
-        double Rx = _width / nX;
-        double Ry = _height / nY;
+            Point Pc = Plocation.add(to.scale(distance));
+            double Ry = _height / nY;
+            double Rx = _width / nX;
 
-        Point pIJ = Plocation.add(to.scale(distance));
+            double Yi = -1 * (i - (nY - 1) / 2.0) * Ry;
+            double Xj = (j - (nX - 1) / 2.0) * Rx;
 
-        double xJ = (j - (nX - 1) / 2d) * Rx;
-        double yI = -(i - (nY - 1) / 2d) * Ry;
+            Point Pij = Pc;
+            if (!isZero(Xj)) {
+                Pij = Pij.add(right.scale(Xj));
+            }
 
-        if (isZero(xJ) && isZero(yI)) {
-            return new Ray(Plocation, pIJ.subtract(Plocation));
-        } else {
-            if (!isZero(xJ))
-                pIJ = pIJ.add(right.scale(xJ));
-            if (!isZero(yI))
-                pIJ = pIJ.add(up.scale(yI));
+            if (!isZero(Yi)) {
+                Pij = Pij.add(up.scale(Yi));
+            }
+
+            return new Ray(Plocation, Pij.subtract(Plocation));
         }
-        return new Ray(Plocation, pIJ.subtract(Plocation));
-    }
-
     /**
      * Creates a new Builder instance for constructing a Camera object.
      *
@@ -184,8 +183,10 @@ public class Camera implements Cloneable {
      * @param i the row index of the pixel.
      * @return the color at the intersection point.
      */
-    private Color castRay(int j, int i) {
-        return rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
+    private Color castRay(int nx, int ny,int j, int i) {
+        Color color= rayTracer.traceRay(constructRay(nx, ny, j, i));
+        imageWriter.writePixel(j, i, color);
+        return color;
     }
 
     /**
@@ -194,23 +195,16 @@ public class Camera implements Cloneable {
      * @return the current Camera object.
      */
     public Camera renderImage() {
+        int nx = imageWriter.getNx();
+        int ny = imageWriter.getNy();
 
-        if (this.imageWriter == null)
-            throw new UnsupportedOperationException("Missing imageWriter");
-        if (this.rayTracer == null)
-            throw new UnsupportedOperationException("Missing rayTracerBase");
-        // Loop through each pixel in the image
-        for (int i = 0; i < this.imageWriter.getNx(); i++) {
-            for (int j = 0; j < this.imageWriter.getNy(); j++) {
-                // Construct a ray through the current pixel and trace it and get the color at the intersection point
-                Color color = rayTracer.traceRay(constructRay(imageWriter.getNx(), imageWriter.getNy(), j, i));
-                // Write the color to the pixel in the image
-                this.imageWriter.writePixel(j, i, color);
+        for (int i = 0; i < nx; ++i) {
+            for (int j = 0; j < ny; ++j) {
+                castRay(nx, ny, j, i);
             }
         }
         return this;
     }
-
     /**
      * Prints a grid on the image.
      *

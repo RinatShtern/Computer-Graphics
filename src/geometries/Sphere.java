@@ -14,7 +14,7 @@ import static primitives.Util.alignZero;
  */
 public class Sphere extends Geometry {
     private final Point center; // The center point of the sphere
-    private final double radius;
+    private final double radius; // The radius of the sphere
 
     /**
      * Constructs a sphere with the given radius and center point.
@@ -38,6 +38,13 @@ public class Sphere extends Geometry {
         return p.subtract(center).normalize();
     }
 
+    /**
+     * Finds the intersection points between the sphere and a given ray, within a given distance.
+     *
+     * @param ray      the ray to check for intersections.
+     * @param distance the maximum distance to check for intersections.
+     * @return a list of intersection points with geometric context, or null if there are no intersections.
+     */
     @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
         Point p0 = ray.getHead();
@@ -45,10 +52,8 @@ public class Sphere extends Geometry {
         Point center = this.center;
         double radius = this.radius;
 
-        if(p0.equals(center)) {
-            //return List.of(center.add(v.scale(radius)));
+        if (p0.equals(center)) {
             return List.of(new GeoPoint(this, ray.getPoint(radius)));
-
         }
 
         Vector u = center.subtract(p0);
@@ -72,29 +77,18 @@ public class Sphere extends Geometry {
 
         // if t1 > 0 and t2 > 0, return two intersections
         if (t1 > 0 && t2 > 0) {
-//            Point p1 = p0.add(v.scale(t1));
-//            Point p2 = p0.add(v.scale(t2));
             Point p1 = ray.getPoint(t1);
             Point p2 = ray.getPoint(t2);
             if (p0.distance(p1) < p0.distance(p2))
-                //return List.of(p1, p2);
-
-                return List.of(new GeoPoint(this,p2), new GeoPoint(this,p1));
+                return List.of(new GeoPoint(this, p2), new GeoPoint(this, p1));
         }
 
         // if only t1 > 0, return one intersection
         if (t1 > 0) {
-//            Point p1 = p0.add(v.scale(t1));
-//            return List.of(p1);
-            return List.of(new GeoPoint(this,ray.getPoint(t1)));
+            return List.of(new GeoPoint(this, ray.getPoint(t1)));
         }
 
         // if only t2 > 0, return one intersection
-//        Point p2 = p0.add(v.scale(t2));
-//        return List.of(p2);
-        return List.of(new GeoPoint(this,ray.getPoint(t2)));
-
+        return List.of(new GeoPoint(this, ray.getPoint(t2)));
     }
-
-
 }

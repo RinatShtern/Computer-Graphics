@@ -24,21 +24,28 @@ public class SimpleRayTracer extends RayTracerBase {
     }
 
     public Color traceRay(Ray ray){
-        List<GeoPoint> intersections =this.scene._geometries.findGeoIntersections(ray);
+        List<GeoPoint> intersections =this.scene._geometries.findGeoIntersectionsHelper(ray,Double.POSITIVE_INFINITY);
 
         if(intersections == null || intersections.isEmpty()){
-            return this.scene.getBackground();
+            return scene._background;
         }
 
         GeoPoint closestPoint = ray.findClosestGeoPoint(intersections);
         return calcColor(closestPoint);
+
     }
 
     private Color calcColor(GeoPoint geoPoint) {
 
-        Color result = this.scene._ambientLight.getIntensity();
-        return result.add(geoPoint.geometry.getEmission());
-
+       // Color result = this.scene._ambientLight.getIntensity();
+        //return result.add(geoPoint.geometry.getEmission());
+        return scene._ambientLight.getIntensity().add(geoPoint.geometry.getEmission());
     }
 
 }
+
+
+
+
+
+

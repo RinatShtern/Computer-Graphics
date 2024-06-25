@@ -24,24 +24,37 @@ public class Geometries extends Intersectable {
      * @param ray the ray to intersect with
      * @return list of intersection points, or empty list if no intersections
      */
+//    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
+//        List<GeoPoint> intersectionPoints = null;
+//        for (Intersectable geometry : geometries) {
+//            List<GeoPoint> geometryPoints = geometry.findGeoIntersections(ray,distance);
+//            if (geometryPoints != null) {
+//                if (intersectionPoints == null) {
+//                    intersectionPoints = new LinkedList<>();
+//                }
+//                intersectionPoints.addAll(geometryPoints);
+//            }
+//        }
+//        if(intersectionPoints!=null)
+//            return intersectionPoints
+//                    .stream()
+//                    .sorted(Comparator.comparingDouble(p->((GeoPoint)p).point.distance(ray.getHead())))
+//                    .toList();
+//        return null;
+//    }
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance) {
-        List<GeoPoint> intersectionPoints = null;
-        for (Intersectable geometry : geometries) {
-            List<GeoPoint> geometryPoints = geometry.findGeoIntersections(ray,distance);
-            if (geometryPoints != null) {
-                if (intersectionPoints == null) {
-                    intersectionPoints = new LinkedList<>();
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double distance){
+        LinkedList<GeoPoint> points = null;
+        for (var geometry : geometries) {
+            var geometryList = geometry.findGeoIntersectionsHelper(ray,distance);
+            if (geometryList != null) {
+                if (points == null) {
+                    points = new LinkedList<>();
                 }
-                intersectionPoints.addAll(geometryPoints);
+                points.addAll(geometryList);
             }
         }
-        if(intersectionPoints!=null)
-            return intersectionPoints
-                    .stream()
-                    .sorted(Comparator.comparingDouble(p->((GeoPoint)p).point.distance(ray.getHead())))
-                    .toList();
-        return null;
+        return points;
     }
 
 

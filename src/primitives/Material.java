@@ -3,11 +3,10 @@ package primitives;
 public class Material {
 
 
-    private Double3 kD = Double3.ZERO;
-    private Double3 kS = Double3.ZERO;
-//    private Double3 kT = Double3.ZERO;
-//    private Double3 kR = Double3.ZERO;
-    private int nShininess = 0;
+    public Double3 kD = Double3.ZERO;
+    public Double3 kS = Double3.ZERO;
+    public int nShininess=0;
+
 
     public Material setkD(Double3 kD) {
         this.kD = kD;
@@ -27,18 +26,7 @@ public class Material {
         return this;
     }
 
-
-//    public Material setkT(Double3 kT) {
-//        this.kT = kT;
-//        return this;
-//    }
-//
-//    public Material setkR(Double3 kR) {
-//        this.kR = kR;
-//        return this;
-//    }
-
-    public Material setShininess(int nShininess) {
+    public Material setnShininess(int nShininess) {
         this.nShininess = nShininess;
         return this;
     }

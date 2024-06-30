@@ -2,6 +2,9 @@ package renderer;
 
 import static java.awt.Color.*;
 
+import lighting.DirectionalLight;
+import lighting.PointLight;
+import lighting.SpotLight;
 import org.junit.jupiter.api.Test;
 
 import geometries.*;
@@ -72,5 +75,6 @@ public class RenderTests {
               .printGrid(100, new Color(WHITE))
               .writeToImage();
    }
+
 }
 

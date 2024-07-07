@@ -52,9 +52,11 @@ public class SpotLight extends PointLight{
         return super.getIntensity(p).scale(Double.max(0, direction.dotProduct(getL(p))));
     }
 
-
-
     public Vector getL(Point p) {
         return super.getL(p);
     }
+
+//    public double getDistance(Point p) {
+//        return position.distance(p);
+//    }
 }

@@ -21,6 +21,30 @@ import static primitives.Util.alignZero;
  * Implementation of RayTracerBase, basic ray tracing
  */
 public class SimpleRayTracer extends RayTracerBase {
+    private static final double DELTA = 0.1;
+    private boolean unshaded(GeoPoint geoPoint, LightSource light, Vector l, Vector n,double ln) {
+        Vector lightDirection = l.scale(-1);
+        Ray ray = new Ray(geoPoint.point, lightDirection);
+        List<GeoPoint> intersections = scene._geometries.findGeoIntersections(ray);
+
+        if (intersections == null)
+            return true;
+
+        intersections.removeIf(
+                (item) -> {
+                    return item.geometry.getMaterial().kT.lowerThan(MIN_CALC_COLOR_K);
+                }
+        );
+        if (intersections.isEmpty())
+            return true;
+        else
+            return false;
+    //return intersections == null || intersections.isEmpty();
+
+    }
+
+
+
 
     /**
      * Constructor defined by scene
@@ -63,7 +87,7 @@ public class SimpleRayTracer extends RayTracerBase {
         for (LightSource lightSource : scene.lights){
             Vector l = lightSource.getL(point);
             double nl = alignZero(n.dotProduct(l));
-            if ( (nl * nv > 0)  ) {     //&& unshaded(geoPoint, lightSource, l, n, nl)
+            if ( (nl * nv > 0)  && unshaded(geoPoint, lightSource, l, n, nl)){
                 Color iL = lightSource.getIntensity(point);
                 color = color.add(
                         iL.scale(calcDiffusive(material,nl)
@@ -86,12 +110,6 @@ public class SimpleRayTracer extends RayTracerBase {
         return material.kS.scale(pow(max, material.nShininess));
     }
 
-//    private boolean unshaded(GeoPoint geoPoint, LightSource light, Vector l, Vector n,double ln) {
-//        Vector lightDirection = l.scale(-1);
-//        Ray ray = new Ray(geoPoint.point, lightDirection);
-//        List<GeoPoint> intersections = scene. geometries.findGeoIntersections(ray);
-//        return intersections == null || intersections.isEmpty();
-//    }
 }
 
 

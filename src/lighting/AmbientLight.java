@@ -3,6 +3,7 @@ package lighting;
 
 import primitives.Color;
 import primitives.Double3;
+import primitives.Point;
 
 /**
  * class AmbientLight extends of light to show the ambient light of the scene
@@ -24,5 +25,4 @@ public class AmbientLight extends Light {
     public AmbientLight(Color Ia, double Ka) {
         super(Ia.scale(Ka));
     }
-
 }

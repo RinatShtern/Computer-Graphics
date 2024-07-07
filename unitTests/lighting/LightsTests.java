@@ -100,7 +100,6 @@ public class LightsTests {
       camera1.setImageWriter(new ImageWriter("lightSphereDirectional", 500, 500))
               .build()
               .renderImage()
-     // camera1.build()
               .writeToImage();
    }
 

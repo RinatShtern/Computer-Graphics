@@ -8,10 +8,10 @@ import static primitives.Util.isZero;
  */
 public class Vector extends Point {
 
-    public static final Vector Y = new Vector(0,1,0);
-    public static final Vector X = new Vector(1,0,0);
-    public static final Vector Z = new Vector(0,0,1);
-    public static final Vector MINUSY = new Vector(0,-1,0);
+    public static final Vector Y = new Vector(0, 1, 0);
+    public static final Vector X = new Vector(1, 0, 0);
+    public static final Vector Z = new Vector(0, 0, 1);
+    public static final Vector MINUSY = new Vector(0, -1, 0);
 
     /**
      * Constructs a vector with the given components.
@@ -21,8 +21,8 @@ public class Vector extends Point {
      * @param z the z-component of the vector
      * @throws IllegalArgumentException if the vector has zero length
      */
-    public Vector(double x, double y, double z){
-        this(new Double3(x,y,z));
+    public Vector(double x, double y, double z) {
+        this(new Double3(x, y, z));
     }
 
     /**
@@ -53,11 +53,12 @@ public class Vector extends Point {
      *
      * @param scalar the scalar value
      * @return a new vector resulting from scaling this vector by the given scalar
+     * @throws IllegalArgumentException if the scalar is zero
      */
     public Vector scale(double scalar) {
-        if(isZero(scalar))
-            throw new IllegalArgumentException("A vector cannot be scaled by " +scalar);
-
+        if (isZero(scalar)) {
+            throw new IllegalArgumentException("A vector cannot be scaled by " + scalar);
+        }
         return new Vector(xyz.scale(scalar));
     }
 
@@ -136,6 +137,11 @@ public class Vector extends Point {
         return xyz.hashCode();
     }
 
+    /**
+     * Returns a string representation of the vector.
+     *
+     * @return a string representation of the vector
+     */
     @Override
     public String toString() {
         return "Vector{" + xyz + '}';

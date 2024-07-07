@@ -1,62 +1,82 @@
 package lighting;
+
 import primitives.*;
 
-import static java.lang.Math.max;
-import static primitives.Util.alignZero;
+/**
+ * Represents a spotlight light source in a scene.
+ * A spotlight emits light in a specific direction from a single point, with an additional angular attenuation factor.
+ */
+public class SpotLight extends PointLight {
 
-public class SpotLight extends PointLight{
-    private Vector direction;
+    private Vector direction; // The direction of the spotlight
 
-    //private double narrowBeam = 1;
-    public SpotLight(Color I, Point position, Vector direction) {
-        super(I, position);
+    /**
+     * Constructs a spotlight with the given intensity, position, and direction.
+     *
+     * @param intensity  the intensity of the light
+     * @param position   the position of the light
+     * @param direction  the direction in which the spotlight emits light
+     */
+    public SpotLight(Color intensity, Point position, Vector direction) {
+        super(intensity, position);
         this.direction = direction.normalize();
     }
 
-    public SpotLight setKC(double kC) {
-
+    /**
+     * Sets the constant attenuation factor for the spotlight.
+     *
+     * @param kC the constant attenuation factor
+     * @return the spotlight itself (for chaining)
+     */
+    @Override
+    public SpotLight setkC(double kC) {
         super.setkC(kC);
         return this;
     }
 
-    public SpotLight setKL(double kL) {
+    /**
+     * Sets the linear attenuation factor for the spotlight.
+     *
+     * @param kL the linear attenuation factor
+     * @return the spotlight itself (for chaining)
+     */
+    @Override
+    public SpotLight setkL(double kL) {
         super.setkL(kL);
         return this;
     }
 
-    public SpotLight setKQ(double kQ) {
+    /**
+     * Sets the quadratic attenuation factor for the spotlight.
+     *
+     * @param kQ the quadratic attenuation factor
+     * @return the spotlight itself (for chaining)
+     */
+    @Override
+    public SpotLight setkQ(double kQ) {
         super.setkQ(kQ);
         return this;
     }
-//    public SpotLight(Color I, Point position, Vector direction,double kC, double kL, double kQ) {
-//        super(I, position);
-//        setkC(kC);
-//        setkL(kL);
-//        setkQ(kQ);
-//        this.direction = direction.normalize();
-//    }
 
-//    public Color getIntensity(Point p) {
-//        Vector l = getL(p);
-//        if(l== null){
-//            l= direction;
-//        }
-//        double cos = alignZero(direction.dotProduct(l)) ;
-//        if (cos <= 0) {
-//            return Color.BLACK;
-//        }
-//        return super.getIntensity(p).scale(cos);
-//    }
-
-    public Color getIntensity (Point p){
+    /**
+     * Gets the intensity of the light at a given point, considering the spotlight's direction.
+     *
+     * @param p the point at which the intensity is calculated
+     * @return the intensity of the light at the given point, adjusted by the spotlight's direction
+     */
+    @Override
+    public Color getIntensity(Point p) {
         return super.getIntensity(p).scale(Double.max(0, direction.dotProduct(getL(p))));
     }
 
+    /**
+     * Gets the direction vector to the light source from a given point.
+     *
+     * @param p the point from which the direction is calculated
+     * @return the direction vector to the light source
+     */
+    @Override
     public Vector getL(Point p) {
         return super.getL(p);
     }
-
-//    public double getDistance(Point p) {
-//        return position.distance(p);
-//    }
 }

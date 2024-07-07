@@ -8,8 +8,19 @@ public class Material {
 
     public Double3 kD = Double3.ZERO; // Diffuse coefficient
     public Double3 kS = Double3.ZERO; // Specular coefficient
+    public Double3 kT = Double3.ZERO;
+    public Double3 kR = Double3.ZERO;
     public int nShininess = 0; // Shininess factor
 
+    public Material setkR(Double3 kR) {
+        this.kR = kR;
+        return this;
+    }
+
+    public Material setkT(Double3 kT) {
+        this.kT = kT;
+        return this;
+    }
     /**
      * Sets the diffuse coefficient (kD) of the material.
      *

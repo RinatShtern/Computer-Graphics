@@ -269,11 +269,19 @@ public class Camera implements Cloneable {
                 throw new IllegalArgumentException("Vectors cannot be null");
             }
             camera.to = to.normalize();
-            camera.right = camera.to.crossProduct(up).normalize();
             camera.up = up.normalize();
             return this;
         }
 
+        public Builder setDirection(Point front, Vector up) {
+            if (front == null || up == null) {
+                throw new IllegalArgumentException("Vectors cannot be null");
+            }
+            camera.to = front.subtract(camera.Plocation).normalize();
+            camera.up = up.normalize();
+
+            return this;
+        }
         /**
          * Sets the size of the view plane.
          *
@@ -313,7 +321,7 @@ public class Camera implements Cloneable {
             if (camera.Plocation == null) {
                 throw new MissingResourceException("Missing rendering data", Camera.class.getName(), "location");
             }
-            if (camera.to == null || camera.up == null || camera.right == null) {
+            if (camera.to == null || camera.up == null ) {
                 throw new MissingResourceException("Missing rendering data", Camera.class.getName(), "direction vectors");
             }
             if (camera._width == 0.0) {
@@ -331,6 +339,9 @@ public class Camera implements Cloneable {
             if (camera.rayTracer == null) {
                 throw new MissingResourceException("Missing rendering data", Camera.class.getName(), "rayTracer");
             }
+
+            camera.right = camera.to.crossProduct(camera.up).normalize();
+
             camera.viewPlanePC = camera.Plocation.add(camera.to.scale(camera.distance));
             try {
                 return (Camera) camera.clone();
@@ -360,5 +371,6 @@ public class Camera implements Cloneable {
             camera.imageWriter = base_render_test;
             return this;
         }
+
     }
 }

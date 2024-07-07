@@ -7,15 +7,27 @@ import geometries.Intersectable.GeoPoint;
 import java.util.List;
 import java.util.Objects;
 
+import static primitives.Util.isZero;
+
 /**
  * Represents a ray in the 3D space.
  * A ray is defined by its starting point (head) and a direction vector.
  */
 public class Ray {
+    private final double DELTA = 0.000001;
 
     final private Point head; // The starting point of the ray
     final private Vector direction; // The direction vector of the ray
 
+    public Ray(Point point, Vector _direction, Vector normal) {
+        //point + normal.scale(±EPSILON)
+        direction = _direction.normalize();
+
+        double nv = normal.dotProduct(direction);
+
+        Vector normalEpsilon = normal.scale((nv > 0 ? DELTA  : -DELTA ));
+        head = point.add(normalEpsilon);
+    }
     /**
      * Constructs a ray with the given starting point and direction vector.
      *
@@ -92,7 +104,7 @@ public class Ray {
      * @return the point on the ray at the given distance
      */
     public Point getPoint(double t) {
-        if (t == 0) {
+        if (isZero(t)) {
             return head;
         }
         return head.add(direction.scale(t));

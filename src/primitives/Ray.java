@@ -109,47 +109,44 @@ public class Ray {
         }
         return head.add(direction.scale(t));
     }
+    public Intersectable.GeoPoint findClosestGeoPoint(List<Intersectable.GeoPoint> lst){
 
-//     public Point findClosestPoint(List<Point> pointList) {
-//        if (pointList == null || pointList.isEmpty()) {
-//            return null;
-//        }
-//
-//        Point result = null;
-//        double minDistance = Double.MAX_VALUE; // אתחול לערך הגדול ביותר האפשרי
-//        double ptDistance;
-//
-//        for (Point pt : pointList) {
-//            ptDistance = head.distance(pt);
-//            if (ptDistance < minDistance) {
-//                minDistance = ptDistance;
-//                result = pt;
-//            }
-//        }
-//        return result;
-//    }
-
-
-    public GeoPoint findClosestGeoPoint(List<GeoPoint> geoPoints) {
-        if (geoPoints == null || geoPoints.isEmpty()) {
+        double distance=Double.POSITIVE_INFINITY;
+        Intersectable.GeoPoint p=null;
+        if(lst==null)
             return null;
-        }
-        GeoPoint closeGeoPoint = null;
-        double minDistance = Double.MAX_VALUE;
-        double ptDistance;
-        if (!geoPoints.isEmpty()) {
 
-
-            for (var pt : geoPoints) {
-                ptDistance = head.distance(pt.point);
-                if (ptDistance < minDistance) {
-                    minDistance = ptDistance;
-                    closeGeoPoint = pt;
-                }
+        for (Intersectable.GeoPoint point : lst) {
+            double dCompare= point.point.distance(head);
+            if (dCompare < distance){
+                distance= dCompare;
+                p=point;
             }
         }
-        return closeGeoPoint;
-        }
+        return p;
+    }
+
+
+//    public GeoPoint findClosestGeoPoint(List<GeoPoint> geoPoints) {
+//        if (geoPoints == null || geoPoints.isEmpty()) {
+//            return null;
+//        }
+//        GeoPoint closeGeoPoint = null;
+//        double minDistance = Double.MAX_VALUE;
+//        double ptDistance;
+//        if (!geoPoints.isEmpty()) {
+//
+//
+//            for (var pt : geoPoints) {
+//                ptDistance = head.distance(pt.point);
+//                if (ptDistance < minDistance) {
+//                    minDistance = ptDistance;
+//                    closeGeoPoint = pt;
+//                }
+//            }
+//        }
+//        return closeGeoPoint;
+//        }
 
 
     public Point findClosestPoint(List<Point> points) {

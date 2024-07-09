@@ -64,6 +64,14 @@ public class Material {
         this.kS = new Double3(kS);
         return this;
     }
+    public Material setkR(double kR) {
+        this.kR = new Double3(kR);
+        return this;
+    }
+    public Material setkT(double kT) {
+        this.kT = new Double3(kT);
+        return this;
+    }
 
     /**
      * Sets the shininess factor (nShininess) of the material.

@@ -236,7 +236,24 @@ public class Camera implements Cloneable {
      */
     public static class Builder {
         private final Camera camera = new Camera();
+        /**
+         * set Direction for camera with a target point
+         *
+         * @param to target point where the camera is directed to
+         * @param up where is the "up" direction of the camera to
+         * @return the builder itself
+         */
+        public Builder setDirection(Point to, Vector up) {
+            //check if vectors are aligned
+            if (camera.Plocation == null) throw new IllegalArgumentException("Please set the camera location first");
 
+            camera.to = to.subtract(camera.Plocation).normalize();
+            up = up.normalize();
+            camera.right = camera.to.crossProduct(up).normalize();
+            camera.up = camera.right.crossProduct(camera.to).normalize();
+
+            return this;
+        }
         /**
          * Default constructor for the Builder class.
          */
@@ -273,15 +290,15 @@ public class Camera implements Cloneable {
             return this;
         }
 
-        public Builder setDirection(Point front, Vector up) {
-            if (front == null || up == null) {
-                throw new IllegalArgumentException("Vectors cannot be null");
-            }
-            camera.to = front.subtract(camera.Plocation).normalize();
-            camera.up = up.normalize();
-
-            return this;
-        }
+//        public Builder setDirection(Point front, Vector up) {
+//            if (front == null || up == null) {
+//                throw new IllegalArgumentException("Vectors cannot be null");
+//            }
+//            camera.to = front.subtract(camera.Plocation).normalize();
+//            camera.up = up.normalize();
+//
+//            return this;
+//        }
         /**
          * Sets the size of the view plane.
          *

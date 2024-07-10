@@ -14,7 +14,7 @@ import static primitives.Util.isZero;
  * A ray is defined by its starting point (head) and a direction vector.
  */
 public class Ray {
-    private final double DELTA = 0.000001;
+    private final double DELTA = 0.1;
 
     final private Point head; // The starting point of the ray
     final private Vector direction; // The direction vector of the ray
@@ -28,6 +28,7 @@ public class Ray {
         Vector normalEpsilon = normal.scale((nv > 0 ? DELTA  : -DELTA ));
         head = point.add(normalEpsilon);
     }
+
     /**
      * Constructs a ray with the given starting point and direction vector.
      *

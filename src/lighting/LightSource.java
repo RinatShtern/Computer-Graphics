@@ -4,6 +4,8 @@ import primitives.Color;
 import primitives.Point;
 import primitives.Vector;
 
+import java.util.List;
+
 /**
  * Interface for light sources in a scene.
  * Defines the methods that all light sources must implement.

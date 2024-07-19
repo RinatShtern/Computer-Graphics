@@ -4,11 +4,14 @@ import primitives.Color;
 import primitives.Point;
 import primitives.Vector;
 
+import java.util.List;
+
 /**
  * Represents a directional light source that emits light in a specific direction.
  */
 public class DirectionalLight extends Light implements LightSource {
     private final Vector direction;
+
 
     /**
      * Constructs a directional light with the given intensity and direction.

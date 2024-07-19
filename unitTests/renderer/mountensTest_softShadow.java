@@ -1,21 +1,26 @@
 package renderer;
 
+import geometries.Sphere;
+import geometries.Triangle;
+import lighting.DirectionalLight;
+import lighting.PointLight;
+import lighting.SpotLight;
 import org.junit.jupiter.api.Test;
-
-import static java.awt.Color.*;
-
-import lighting.*;
-import geometries.*;
-import primitives.*;
+import primitives.Color;
+import primitives.Material;
+import primitives.Point;
+import primitives.Vector;
 import scene.Scene;
 
-public class mountensTest{
+import static java.awt.Color.YELLOW;
+
+public class mountensTest_softShadow {
 
 	@Test
 	public void ourPicture(){
 
 		Scene scene = new Scene("Test scene")
-				//.setAmbientLight(new AmbientLight(new Color(3, 3, 3), Double3.ONE))//ADDED
+		//		.setAmbientLight(new AmbientLight(new Color(255, 191, 191), Double3.ONE))//ADDED
 				.setBackground(new Color( 191, 41, 99));
 
 		 Camera.Builder camera     = Camera.getBuilder()
@@ -24,11 +29,22 @@ public class mountensTest{
 				.setLocation(new Point(10000, -30000, 10000)).setVpDistance(10000)
 				.setDirection(new Vector(-1,3,-1).normalize(), new Vector(-1,3,10))
 				 .setVpSize(150, 150);
-
+		 ///חצי הפוך
+//		Scene scene = new Scene("Test scene")
+//		//		.setAmbientLight(new AmbientLight(new Color(255, 191, 191), Double3.ONE))//ADDED
+//				.setBackground(new Color( 191, 41, 99));
+//
+//		 Camera.Builder camera     = Camera.getBuilder()
+//
+//				.setRayTracer(new SimpleRayTracer(scene))
+//				.setLocation(new Point(10000, -30000, 10000)).setVpDistance(10000)
+//				.setDirection(Point.ZERO, Vector.Y)
+//				.setVpSize(150, 150);
 
 		Material mountainM = new Material().setkD(0.6).setkS(0.4).setnShininess(200),
 				snowM = new Material().setkD(0.3).setkS(0.6).setnShininess(200).setShininesR(0.4),
 				seaM = new Material().setkD(0.2).setkS(0.9).setnShininess(3000).setShininesR(0.6),
+				birdM = new Material().setkD(0.2).setkS(0.6).setnShininess(300),
 				cloudM = new Material().setkD(0.5).setkS(0.6).setnShininess(3000),
 				bushM = new Material().setkD(0.2).setkS(0.1).setnShininess(300);
 
@@ -230,6 +246,26 @@ public class mountensTest{
 		//-------------End clouds---------------
 
 
+		//---------------Birds------------------
+		// Bird 1
+		scene._geometries.add(new Triangle(new Point(-66,-199,39), new Point(-66,-184,46), //
+				new Point(-61,-184,43)).setEmission(new Color(0,0,0)).setMaterial(birdM));
+		scene._geometries.add(new Triangle(new Point(-66,-199,39), new Point(-83,-198,43), //
+				new Point(-76,-209,43)).setEmission(new Color(0,0,0)).setMaterial(birdM));
+		scene._geometries.add(new Triangle(new Point(-40,-173,39), new Point(-66,-184,46), //
+				new Point(-61,-184,43)).setEmission(new Color(0,0,0)).setMaterial(birdM));
+		scene._geometries.add(new Triangle(new Point(-83,-220,37), new Point(-83,-198,43), //
+				new Point(-76,-209,43)).setEmission(new Color(0,0,0)).setMaterial(birdM));
+		// Bird 2
+		scene._geometries.add(new Triangle(new Point(162,59,133), new Point(168,63,139), //
+				new Point(169,55,138)).setEmission(new Color(0,0,0)).setMaterial(birdM));
+		scene._geometries.add(new Triangle(new Point(162,59,133), new Point(154,65,140), //
+				new Point(155,57,140)).setEmission(new Color(0,0,0)).setMaterial(birdM));
+		scene._geometries.add(new Triangle(new Point(177,59,130), new Point(168,63,139), //
+				new Point(169,55,138)).setEmission(new Color(0,0,0)).setMaterial(birdM));
+		scene._geometries.add(new Triangle(new Point(147,60,136), new Point(154,65,140), //
+				new Point(155,57,140)).setEmission(new Color(0,0,0)).setMaterial(birdM));
+		//------------End birds--------------
 
 		// Bushes
 		scene._geometries.add(new Sphere(new Point(225, -25, -5),22d).setEmission(new Color(114,140,0)).setMaterial(bushM));

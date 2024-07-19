@@ -2,6 +2,10 @@ package lighting;
 
 import primitives.*;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+
 /**
  * Represents a point light source in a scene.
  * A point light source emits light equally in all directions from a single point.
@@ -12,6 +16,7 @@ public class PointLight extends Light implements LightSource {
     private double kC = 1d; // Constant attenuation factor
     private double kL = 0d; // Linear attenuation factor
     private double kQ = 0d; // Quadratic attenuation factor
+
 
     /**
      * Constructs a point light with the given intensity and position.

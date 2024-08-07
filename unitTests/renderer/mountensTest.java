@@ -1,6 +1,4 @@
-package renderer;
-
-import org.junit.jupiter.api.Test;
+package renderer;import org.junit.jupiter.api.Test;
 
 import static java.awt.Color.*;
 
@@ -15,16 +13,13 @@ public class mountensTest{
 	public void ourPicture(){
 
 		Scene scene = new Scene("Test scene")
-				//.setAmbientLight(new AmbientLight(new Color(3, 3, 3), Double3.ONE))//ADDED
-				.setBackground(new Color( 191, 41, 99));
+				.setBackground(new Color(120, 120, 140));
 
-		 Camera.Builder camera     = Camera.getBuilder()
-
+		Camera.Builder camera = Camera.getBuilder()
 				.setRayTracer(new SimpleRayTracer(scene))
 				.setLocation(new Point(10000, -30000, 10000)).setVpDistance(10000)
-				.setDirection(new Vector(-1,3,-1).normalize(), new Vector(-1,3,10))
-				 .setVpSize(150, 150);
-
+				.setDirection(new Vector(-1, 3, -1).normalize(), new Vector(-1, 3, 10))
+				.setVpSize(150, 150);
 
 		Material mountainM = new Material().setkD(0.6).setkS(0.4).setnShininess(200),
 				snowM = new Material().setkD(0.3).setkS(0.6).setnShininess(200).setShininesR(0.4),
@@ -32,9 +27,27 @@ public class mountensTest{
 				cloudM = new Material().setkD(0.5).setkS(0.6).setnShininess(3000),
 				bushM = new Material().setkD(0.2).setkS(0.1).setnShininess(300);
 
-		//sun
+		// Sun
 		Material sunM = new Material().setkD(0.2).setkS(0.2).setnShininess(200).setkT(0.6);
 		scene._geometries.add(new Sphere(new Point(-100, 140, 100), 40d).setEmission(new Color(251, 58, 16)).setMaterial(sunM));
+
+		// Snow
+		Material snowMaterial = new Material().setkD(0.2).setkS(0.8).setnShininess(100).setkT(0.3);
+		Color snowColor = new Color(255, 255, 255);
+
+		// Add snow up to the tree line
+		int snowballs = 100;
+		for (int i = 0; i < snowballs; i++) {
+			double x = Math.random() * 2000 - 1000;
+			double y = Math.random() * 2000 - 1000;
+			double z = Math.random() * 500; // Limit snow height
+			if (z <= 500) { // Adjusted the tree line height to make sure snowballs are visible
+				double radius = Math.random() * 10 + 5;
+				scene._geometries.add(new Sphere(new Point(x, y, z), radius)
+						.setEmission(snowColor)
+						.setMaterial(snowMaterial));
+			}
+		}
 
 		//--------------mountains--------------------
 		// Triangle 1

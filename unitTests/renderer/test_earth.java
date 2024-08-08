@@ -1,34 +1,30 @@
 package renderer;
 
+import geometries.Sphere;
+import geometries.Triangle;
+import lighting.AmbientLight;
+import lighting.DirectionalLight;
+import lighting.SpotLight;
 import org.junit.jupiter.api.Test;
-import static java.awt.Color.*;
-
-import lighting.*;
-import geometries.*;
-import primitives.*;
+import primitives.Color;
+import primitives.Material;
+import primitives.Point;
+import primitives.Vector;
 import scene.Scene;
 
-public class test {
+public class test_earth {
 
    @Test
    public void ourPicture() {
       Scene scene = new Scene("Test scene")
-      .setBackground(new Color(70, 70, 90))  // שינוי צבע הרקע לצבע קריר יותר
-              .setAmbientLight(new AmbientLight(new Color(255, 255, 255), 0.1));
-      // הוספת תאורה רכה
-//      Camera.Builder camera = Camera.getBuilder()
-//              .setRayTracer(new SimpleRayTracer(scene))
-//              .setLocation(new Point(10000, -30000, 10000)).setVpDistance(10000)
-//              .setDirection(new Vector(-1, 3, -1).normalize(), new Vector(-1, 3, 10))
-//              .setVpSize(150, 150);
+              .setBackground(new Color(70, 70, 90))  // שינוי צבע הרקע לצבע קריר יותר
+              .setAmbientLight(new AmbientLight(new Color(255, 255, 255), 0.1));  // הוספת תאורה רכה
+
       Camera.Builder camera = Camera.getBuilder()
               .setRayTracer(new SimpleRayTracer(scene))
-              .setLocation(new Point(0, -5000, 5000))  // מקרבים את המצלמה לסצנה
-              .setVpDistance(5000)  // מקרבים את המישור הוירטואלי
-              .setDirection(new Vector(0, 1, -1).normalize(), new Vector(0, 1, 0))  // כיוון המצלמה לסצנה
-              .setVpSize(500, 500);  // מגדילים את גודל המישור הוירטואלי
-      scene.lights.add(new SpotLight(new Color(255, 223, 186), new Point(0, -5000, 5000), new Vector(0, 1, -1))
-              .setkL(0.00001).setkQ(0.000005));
+              .setLocation(new Point(10000, -30000, 10000)).setVpDistance(10000)
+              .setDirection(new Vector(-1, 3, -1).normalize(), new Vector(-1, 3, 10))
+              .setVpSize(150, 150);
 
       Material mountainM1 = new Material().setkD(0.6).setkS(0.4).setnShininess(200),
               mountainM2 = new Material().setkD(0.5).setkS(0.3).setnShininess(150),
@@ -124,14 +120,13 @@ public class test {
 
       // Earth
       scene._geometries.add(new Triangle(new Point(0, 140, 0), new Point(-600, -45, 0), //
-              new Point(600, -45, 0)).setEmission(new Color(92, 73, 57)).setMaterial(baseM));  // יישום חומר הבסיס לקרקע
+              new Point(600, -45, 0)).setEmission(new Color(92, 73, 57)).setMaterial
+              (new Material().setkD(0.5).setkS(0.5).setnShininess(30)));  // יישום חומר הבסיס לקרקע
 
       // Sea
       scene._geometries.add(new Triangle(new Point(10000, 0, 0), new Point(-10000, 0, 0), //
               new Point(0, -10000, 0)).setEmission(new Color(0, 25, 50)).setMaterial(seaM));
-// Sea
-//      scene._geometries.add(new Triangle(new Point(9060, 4220, 0), new Point(-9060, -4220, 0), //
-//              new Point(4220, -9060, 0)).setEmission(new Color(0, 25, 50)).setMaterial(seaM));
+
       // Sky
       scene._geometries.add(new Triangle(new Point(10000, 10000, 0), new Point(-10000, 10000, 0), //
               new Point(0, 10000, 100000)).setEmission(new Color(191, 41, 99)));
@@ -158,38 +153,38 @@ public class test {
 
       //-------------End clouds---------------
 
-//      // Bushes
-//      scene._geometries.add(new Sphere(new Point(225, -25, -5), 22d).setEmission(new Color(0, 100, 0)).setMaterial(bushM1));
-//      scene._geometries.add(new Sphere(new Point(172, -20, -5), 15d).setEmission(new Color(34, 139, 34)).setMaterial(bushM2));
-//      scene._geometries.add(new Sphere(new Point(130, -15, -5), 24d).setEmission(new Color(0, 128, 0)).setMaterial(bushM1));
-//      scene._geometries.add(new Sphere(new Point(160, -20, -5), 10d).setEmission(new Color(107, 142, 35)).setMaterial(bushM2));
-//      scene._geometries.add(new Sphere(new Point(100, -20, -5), 23d).setEmission(new Color(0, 100, 0)).setMaterial(bushM1));
-//      scene._geometries.add(new Sphere(new Point(30, -19, -5), 14d).setEmission(new Color(34, 139, 34)).setMaterial(bushM2));
-//      scene._geometries.add(new Sphere(new Point(-24, -25, -5), 17d).setEmission(new Color(0, 128, 0)).setMaterial(bushM1));
-//      scene._geometries.add(new Sphere(new Point(-50, -20, -5), 15d).setEmission(new Color(107, 142, 35)).setMaterial(bushM2));
-//      scene._geometries.add(new Sphere(new Point(-100, -16, -5), 23d).setEmission(new Color(0, 100, 0)).setMaterial(bushM1));
-//      scene._geometries.add(new Sphere(new Point(-130, -25, -5), 18d).setEmission(new Color(34, 139, 34)).setMaterial(bushM2));
-//      scene._geometries.add(new Sphere(new Point(-165, -20, -5), 23d).setEmission(new Color(0, 128, 0)).setMaterial(bushM1));
-//      scene._geometries.add(new Sphere(new Point(-257, -22, -5), 19d).setEmission(new Color(107, 142, 35)).setMaterial(bushM2));
-//      scene._geometries.add(new Sphere(new Point(-233, -24, -5), 20d).setEmission(new Color(0, 100, 0)).setMaterial(bushM1));
-//      scene._geometries.add(new Sphere(new Point(-246, -25, -5), 22d).setEmission(new Color(34, 139, 34)).setMaterial(bushM2));
-//      scene._geometries.add(new Sphere(new Point(-220, -20, -5), 15d).setEmission(new Color(0, 128, 0)).setMaterial(bushM1));
-//      scene._geometries.add(new Sphere(new Point(-182, -15, -5), 21d).setEmission(new Color(107, 142, 35)).setMaterial(bushM2));
-//      scene._geometries.add(new Sphere(new Point(-147, -20, -5), 10d).setEmission(new Color(0, 100, 0)).setMaterial(bushM1));
-//      scene._geometries.add(new Sphere(new Point(-123, -20, -5), 23d).setEmission(new Color(34, 139, 34)).setMaterial(bushM2));
-//      scene._geometries.add(new Sphere(new Point(-76, -19, -5), 14d).setEmission(new Color(0, 128, 0)).setMaterial(bushM1));
-//      scene._geometries.add(new Sphere(new Point(-31, -25, -5), 17d).setEmission(new Color(107, 142, 35)).setMaterial(bushM2));
-//      scene._geometries.add(new Sphere(new Point(11, -20, -5), 15d).setEmission(new Color(0, 100, 0)).setMaterial(bushM1));
-//      scene._geometries.add(new Sphere(new Point(49, -16, -5), 16d).setEmission(new Color(34, 139, 34)).setMaterial(bushM2));
-//      scene._geometries.add(new Sphere(new Point(85, -25, -5), 18d).setEmission(new Color(0, 128, 0)).setMaterial(bushM1));
-//      scene._geometries.add(new Sphere(new Point(116, -20, -5), 13d).setEmission(new Color(107, 142, 35)).setMaterial(bushM2));
-//      scene._geometries.add(new Sphere(new Point(153, -22, -5), 19d).setEmission(new Color(0, 100, 0)).setMaterial(bushM1));
-//      scene._geometries.add(new Sphere(new Point(240, -24, -5), 20d).setEmission(new Color(34, 139, 34)).setMaterial(bushM2));
+      // Bushes
+      scene._geometries.add(new Sphere(new Point(225, -25, -5), 22d).setEmission(new Color(0, 100, 0)).setMaterial(bushM1));
+      scene._geometries.add(new Sphere(new Point(172, -20, -5), 15d).setEmission(new Color(34, 139, 34)).setMaterial(bushM2));
+      scene._geometries.add(new Sphere(new Point(130, -15, -5), 24d).setEmission(new Color(0, 128, 0)).setMaterial(bushM1));
+      scene._geometries.add(new Sphere(new Point(160, -20, -5), 10d).setEmission(new Color(107, 142, 35)).setMaterial(bushM2));
+      scene._geometries.add(new Sphere(new Point(100, -20, -5), 23d).setEmission(new Color(0, 100, 0)).setMaterial(bushM1));
+      scene._geometries.add(new Sphere(new Point(30, -19, -5), 14d).setEmission(new Color(34, 139, 34)).setMaterial(bushM2));
+      scene._geometries.add(new Sphere(new Point(-24, -25, -5), 17d).setEmission(new Color(0, 128, 0)).setMaterial(bushM1));
+      scene._geometries.add(new Sphere(new Point(-50, -20, -5), 15d).setEmission(new Color(107, 142, 35)).setMaterial(bushM2));
+      scene._geometries.add(new Sphere(new Point(-100, -16, -5), 23d).setEmission(new Color(0, 100, 0)).setMaterial(bushM1));
+      scene._geometries.add(new Sphere(new Point(-130, -25, -5), 18d).setEmission(new Color(34, 139, 34)).setMaterial(bushM2));
+      scene._geometries.add(new Sphere(new Point(-165, -20, -5), 23d).setEmission(new Color(0, 128, 0)).setMaterial(bushM1));
+      scene._geometries.add(new Sphere(new Point(-257, -22, -5), 19d).setEmission(new Color(107, 142, 35)).setMaterial(bushM2));
+      scene._geometries.add(new Sphere(new Point(-233, -24, -5), 20d).setEmission(new Color(0, 100, 0)).setMaterial(bushM1));
+      scene._geometries.add(new Sphere(new Point(-246, -25, -5), 22d).setEmission(new Color(34, 139, 34)).setMaterial(bushM2));
+      scene._geometries.add(new Sphere(new Point(-220, -20, -5), 15d).setEmission(new Color(0, 128, 0)).setMaterial(bushM1));
+      scene._geometries.add(new Sphere(new Point(-182, -15, -5), 21d).setEmission(new Color(107, 142, 35)).setMaterial(bushM2));
+      scene._geometries.add(new Sphere(new Point(-147, -20, -5), 10d).setEmission(new Color(0, 100, 0)).setMaterial(bushM1));
+      scene._geometries.add(new Sphere(new Point(-123, -20, -5), 23d).setEmission(new Color(34, 139, 34)).setMaterial(bushM2));
+      scene._geometries.add(new Sphere(new Point(-76, -19, -5), 14d).setEmission(new Color(0, 128, 0)).setMaterial(bushM1));
+      scene._geometries.add(new Sphere(new Point(-31, -25, -5), 17d).setEmission(new Color(107, 142, 35)).setMaterial(bushM2));
+      scene._geometries.add(new Sphere(new Point(11, -20, -5), 15d).setEmission(new Color(0, 100, 0)).setMaterial(bushM1));
+      scene._geometries.add(new Sphere(new Point(49, -16, -5), 16d).setEmission(new Color(34, 139, 34)).setMaterial(bushM2));
+      scene._geometries.add(new Sphere(new Point(85, -25, -5), 18d).setEmission(new Color(0, 128, 0)).setMaterial(bushM1));
+      scene._geometries.add(new Sphere(new Point(116, -20, -5), 13d).setEmission(new Color(107, 142, 35)).setMaterial(bushM2));
+      scene._geometries.add(new Sphere(new Point(153, -22, -5), 19d).setEmission(new Color(0, 100, 0)).setMaterial(bushM1));
+      scene._geometries.add(new Sphere(new Point(240, -24, -5), 20d).setEmission(new Color(34, 139, 34)).setMaterial(bushM2));
 
       //------------Light source------------
 
-      //scene.lights.add(new DirectionalLight(new Color(200, 200, 0), new Vector(0, 0, -1)));
-      //scene.lights.add(new SpotLight(new Color(123, 104, 238), new Point(10, -30, 40), new Vector(-1, 3, 7)));
+      scene.lights.add(new DirectionalLight(new Color(200, 200, 0), new Vector(0, 0, -1)));
+      scene.lights.add(new SpotLight(new Color(123, 104, 238), new Point(10, -30, 40), new Vector(-1, 3, 7)));
 
       //-------------End light source--------------------
 
@@ -239,18 +234,8 @@ public class test {
                  .setEmission(new Color(205, 92, 92))  // Reddish color for the roof
                  .setMaterial(new Material().setkD(0.7).setkS(0.3).setnShininess(200)));
       }
-      //------------Light source------------
 
-      // Adding sun light as a directional light
-      scene.lights.add(new DirectionalLight(new Color(255, 223, 0), new Vector(-1, -1, -1)));  // תאורה מהשמש בכיוון הדרום מערבי
-
-      // הוספת אור כיווני מהשמש
-      scene.lights.add(new DirectionalLight(new Color(200, 200, 0), new Vector(0, 0, -1)));
-      scene.lights.add(new SpotLight(new Color(123, 104, 238), new Point(10, -30, 40), new Vector(-1, 3, 7)));
-
-      //-------------End light source--------------------
-
-      ImageWriter imageWriter = new ImageWriter("test", 1400, 1400);
+      ImageWriter imageWriter = new ImageWriter("test_earth", 1400, 1400);
       camera.setRayTracer(new SimpleRayTracer(scene))
               .setImageWriter(imageWriter)
               .build()
@@ -258,5 +243,3 @@ public class test {
               .writeToImage();
    }
 }
-
-

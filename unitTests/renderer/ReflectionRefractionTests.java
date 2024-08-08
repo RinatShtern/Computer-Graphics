@@ -16,18 +16,12 @@ import static java.awt.Color.*;
  * @author dzilb
  */
 public class ReflectionRefractionTests {
-   /**
-    * Scene for the tests
-    */
-   private final Scene scene = new Scene("Test scene");
-   /**
-    * Camera builder for the tests with triangles
-    */
+   /** Scene for the tests */
+   private final Scene          scene         = new Scene("Test scene");
+   /** Camera builder for the tests with triangles */
    private final Camera.Builder cameraBuilder = Camera.getBuilder()
-           .setDirection(new Vector(0, 0, -1), Vector.Y)
+           .setDirection(new Vector(0, 0, -1),new Vector(0, 1, 0))
            .setRayTracer(new SimpleRayTracer(scene));
-
-//region tests
    /**
     * Produce a picture of a sphere lighted by a spotlight
     */
@@ -79,6 +73,7 @@ public class ReflectionRefractionTests {
               .build()
               .renderImage()
               .writeToImage();
+
    }
 
    /**

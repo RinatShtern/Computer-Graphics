@@ -5,6 +5,7 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.List;
 import java.util.MissingResourceException;
 
 import static primitives.Util.alignZero;
@@ -27,6 +28,8 @@ public class Camera implements Cloneable {
 
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
+    private boolean adaptive = false;
+    private static int numOfThreads = 1;
 
     /**
      * Gets the camera location.
@@ -197,14 +200,163 @@ public class Camera implements Cloneable {
     public Camera renderImage() {
         int nx = imageWriter.getNx();
         int ny = imageWriter.getNy();
-
         for (int i = 0; i < nx; ++i) {
             for (int j = 0; j < ny; ++j) {
                 castRay(nx, ny, j, i);
             }
         }
+
+
         return this;
     }
+    /**
+     * Renders the image using the current image writer and ray tracer.
+     * The ray tracer find the color and the image writer colors the pixels
+     *
+     * @return This camera instance.
+     * @throws UnsupportedOperationException If either the image writer or the ray tracer is not initialized.
+     */
+    public Camera renderImagepixel() {
+        // Check if all required camera data is available
+        if (Plocation == null || right == null
+                || up == null || to == null || distance == 0
+                || _width == 0 || _height == 0 || viewPlanePC == null
+                || imageWriter == null || rayTracer == null) {
+            throw new MissingResourceException("Missing camera data", Camera.class.getName(), null);
+        }
+        // Get the number of pixels in X and Y directions from the image writer
+        int nX = imageWriter.getNx();
+        int nY = imageWriter.getNy();
+        // Initialize the Pixel class with the number of rows, columns, and total pixels
+        Pixel.initialize(nY, nX, 1);
+
+        // Check if adaptive mode is enabled
+        if (!adaptive) {
+            // Render the image using regular super-sampling (non-adaptive)
+            // Create multiple threads to process the pixels in parallel
+            while (numOfThreads-- > 0) {
+                new Thread(() -> {
+                    // Iterate over each pixel in the image
+                    for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone()) {
+                        // Construct rays for the current pixel and trace them using the ray tracer
+                        Ray ray = constructRay(nX, nY,pixel.col, pixel.row);
+                        Color pixelColor = rayTracer.traceRay(ray);
+                        // Write the pixel color to the image writer
+                        imageWriter.writePixel(pixel.col, pixel.row, pixelColor);
+                    }
+                }).start();
+            }
+            // Wait for all the threads to finish processing the pixels
+            Pixel.waitToFinish();
+        }
+        else {
+            // Render the image using adaptive super-sampling
+            // Create multiple threads to process the pixels in parallel
+            while (numOfThreads-- > 0) {
+                new Thread(() -> {
+                    // Iterate over each pixel in the image
+                    for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone()) {
+                        // Apply adaptive super-sampling to determine the pixel color
+                        Color pixelColor = SuperSampling(nX, nY, pixel.col, pixel.row, 0, false);
+                        // Write the pixel color to the image writer
+                        imageWriter.writePixel(pixel.col, pixel.row, pixelColor);
+                    }
+                }).start();
+            }
+            // Wait for all the threads to finish processing the pixels
+            Pixel.waitToFinish();
+        }
+        // Return the camera object
+        return this;
+    }
+
+    /**
+     * Checks the color of the pixel with the help of individual rays and averages between them and only
+     * if necessary continues to send beams of rays in recursion
+     * @param nX amount of pixels by length
+     * @param nY amount of pixels by width
+     * @param j The position of the pixel relative to the y-axis
+     * @param i The position of the pixel relative to the x-axis
+     * @param numOfRays The amount of rays sent
+     * @return Pixel color
+     */
+    private Color SuperSampling(int nX, int nY, int j, int i,  int numOfRays, boolean adaptiveAlising)  {
+        // Get the right and up vectors of the camera
+        Vector Vright = right;
+        Vector Vup = up;
+        // Get the location of the camera
+        Point cameraLoc = this.getLocation();
+        // Calculate the number of rays in each row and column
+        int numOfRaysInRowCol = (int)Math.floor(Math.sqrt(numOfRays));
+        // If the number of rays is 1, perform regular ray tracing
+        if(numOfRaysInRowCol == 1)
+            return rayTracer.traceRay(constructRayThroughPixel(nX, nY, j, i));
+        // Calculate the center point of the current pixel
+        Point pIJ = getCenterOfPixel(nX, nY, j, i);
+        // Calculate the height and width ratios of the pixel
+        double rY = alignZero(_height / nY);
+        double rX = alignZero(_width / nX);
+
+        // Calculate the pixel row and column ratios
+        double PRy = rY/numOfRaysInRowCol;
+        double PRx = rX/numOfRaysInRowCol;
+
+        if (adaptiveAlising)
+            return rayTracer.AdaptiveSuperSamplingRec(pIJ, rX, rY, PRx, PRy,cameraLoc,Vright, Vup,null);
+        else
+            return rayTracer.RegularSuperSampling(pIJ, rX, rY, PRx, PRy,cameraLoc,Vright, Vup,null);
+    }
+
+
+    /**
+     * construct ray through a pixel in the view plane
+     * nX and nY create the resolution
+     * @param nX number of pixels in the width of the view plane
+     * @param nY number of pixels in the height of the view plane
+     * @param j  index row in the view plane
+     * @param i  index column in the view plane
+     * @return ray that goes through the pixel (j, i)  Ray(p0, Vi,j)
+     */
+    public Ray constructRayThroughPixel(int nX, int nY, int j, int i) {
+        Point pIJ = getCenterOfPixel(nX, nY, j, i); // center point of the pixel
+
+        //Vi,j = Pi,j - P0, the direction of the ray to the pixel(j, i)
+        Vector vIJ = pIJ.subtract(Plocation);
+        return new Ray(Plocation, vIJ);
+    }
+    /**
+     * get the center point of the pixel in the view plane
+     * @param nX number of pixels in the width of the view plane
+     * @param nY number of pixels in the height of the view plane
+     * @param j  index row in the view plane
+     * @param i  index column in the view plane
+     * @return the center point of the pixel
+     */
+    private Point getCenterOfPixel(int nX, int nY, int j, int i) {
+        // calculate the ratio of the pixel by the height and by the width of the view plane
+        // the ratio Ry = h/Ny, the height of the pixel
+        double rY = alignZero(_height / nY);
+        // the ratio Rx = w/Nx, the width of the pixel
+        double rX = alignZero(_width / nX);
+
+        // Xj = (j - (Nx -1)/2) * Rx
+        double xJ = alignZero((j - ((nX - 1d) / 2d)) * rX);
+        // Yi = -(i - (Ny - 1)/2) * Ry
+        double yI = alignZero(-(i - ((nY - 1d) / 2d)) * rY);
+
+        Point pIJ = viewPlanePC;
+
+        if (!isZero(xJ)) {
+            pIJ = pIJ.add(right.scale(xJ));
+        }
+        if (!isZero(yI)) {
+            pIJ = pIJ.add(up.scale(yI));
+        }
+        return pIJ;
+    }
+
+
+
     /**
      * Prints a grid on the image.
      *
@@ -290,15 +442,6 @@ public class Camera implements Cloneable {
             return this;
         }
 
-//        public Builder setDirection(Point front, Vector up) {
-//            if (front == null || up == null) {
-//                throw new IllegalArgumentException("Vectors cannot be null");
-//            }
-//            camera.to = front.subtract(camera.Plocation).normalize();
-//            camera.up = up.normalize();
-//
-//            return this;
-//        }
         /**
          * Sets the size of the view plane.
          *
@@ -389,5 +532,23 @@ public class Camera implements Cloneable {
             return this;
         }
 
+        /**
+         * set the adaptive
+         * @return the Camera object
+         */
+        public Builder setadaptive(boolean adaptive) {
+            adaptive = adaptive;
+            return this;
+        }
+
+        /**
+         * set the threadsCount
+         * @return the Camera object
+         */
+        public Builder setMultiThreading(int threadsCount) {
+            numOfThreads = threadsCount;
+            return this;
+
+        }
     }
 }

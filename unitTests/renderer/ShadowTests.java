@@ -175,7 +175,31 @@ public class ShadowTests {
                       .setkL(4E-4).setkQ(2E-5));
 
       camera.setImageWriter(new ImageWriter("anti", 600, 600))
-              .setAntiAliasing(200)
+              .setAntiAliasing(50)
+              .build()
+              .renderImagepixel()
+              .writeToImage();
+
+   }
+   @Test
+   public void AntiAndAdaptive() {
+      scene._geometries.add(
+              new Triangle(new Point(-150, -150, -115), new Point(150, -150, -135),
+                      new Point(75, 75, -150)) //
+                      .setMaterial(new Material().setkS(0.8).setnShininess(60)), //
+              new Triangle(new Point(-150, -150, -115), new Point(-70, 70, -140), new Point(75, 75, -150)) //
+                      .setMaterial(new Material().setkS(0.8).setnShininess(60)), //
+              new Sphere(new Point(0, 0, -11), 30d) //
+                      .setEmission(new Color(BLUE)) //
+                      .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(30)) //
+      );
+      scene.setAmbientLight(new AmbientLight(new Color(WHITE), 0.15));
+      scene.lights.add(
+              new SpotLight(new Color(700, 400, 400), new Point(40, 40, 115), new Vector(-1, -1, -4)) //
+                      .setkL(4E-4).setkQ(2E-5));
+
+      camera.setImageWriter(new ImageWriter("antiAndAdaptive", 600, 600))
+              .setAntiAliasing(50).setMultiThreading(4).setadaptive(true)
               .build()
               .renderImagepixel()
               .writeToImage();

@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import static java.awt.Color.BLACK;
 import static java.lang.Math.*;
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
@@ -64,12 +65,30 @@ public SimpleRayTracer(Scene scene) {
         return intersection == null ? scene._background : calcColor(intersection, ray);
     }
     /**
+     * Trace the ray and calculates the color of the point that interact with the geometries of the scene
+     *
+     * @param rays the ray that came out of the camera
+     * @return the color of the object that the ray is interact with
+     */
+    @Override
+    public Color TraceRays(List<Ray> rays) {
+        Color color = new Color(BLACK);
+        for (Ray ray : rays) {
+            GeoPoint clossestGeoPoint = findClosestIntersection(ray);
+            if (clossestGeoPoint == null)
+                color = color.add(scene._background);
+            else color = color.add(calcColor(clossestGeoPoint, ray));
+        }
+        return color.reduce(rays.size());
+    }
+    /**
      * Calculate the color of the intersection between the ray at the given point on a geometry
      *
      * @param intersection a given point and geometry
      * @param ray          a given ray
      * @return color at point
      */
+
     private Color calcColor(GeoPoint intersection, Ray ray) {
 //        return scene.ambientLight.getIntensity().add(calcLocalEffects(intersection, ray));
         return calcColor(intersection, ray, MAX_CALC_COLOR_LEVEL, new Double3(INITIAL_K))
@@ -184,7 +203,10 @@ public SimpleRayTracer(Scene scene) {
 
             if (nl * nv > 0) {
                 //one ray- witout soft shadow
-                Double3 ktr = transparency(gp, l, n, lightSource);
+                // changed to accomedate soft shadows
+                Double3 ktr = softShadows ? calcSoftShadows(gp, n, lightSource) : transparency(gp, l, n, lightSource);
+                // Double3 ktr = transparency(gp, l, n, lightSource);
+
 
                 if (!ktr.product(k).lowerThan(MIN_CALC_COLOR_K)) {
                     Color iL = lightSource.getIntensity(gp.point).scale(ktr);

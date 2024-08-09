@@ -1,6 +1,9 @@
 package lighting;
 
-import primitives.Color;
+import primitives.*;
+
+import java.util.List;
+
 
 abstract class Light {
     protected Color intensity;

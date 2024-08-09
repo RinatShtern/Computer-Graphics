@@ -22,6 +22,11 @@ public class SpotLight extends PointLight {
         this.direction = direction.normalize();
     }
 
+    public SpotLight(Color intensity, Point position, Vector direction, double radius) {
+        super(intensity, position, radius);
+        this.direction = direction.normalize();
+    }
+
     /**
      * Sets the constant attenuation factor for the spotlight.
      *

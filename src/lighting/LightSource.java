@@ -34,4 +34,6 @@ public interface LightSource {
      * @return the distance to the light source
      */
     public double getDistance(Point p);
+
+    List<Vector> getRayBeam(Point p);
 }

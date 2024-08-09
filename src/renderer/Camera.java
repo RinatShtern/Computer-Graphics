@@ -5,6 +5,7 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.MissingResourceException;
 
@@ -28,8 +29,10 @@ public class Camera implements Cloneable {
 
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
-    private boolean adaptive = false;
+    private static boolean adaptive = false;
     private static int numOfThreads = 1;
+    private static int antiAliasing = 1;
+
 
     /**
      * Gets the camera location.
@@ -239,8 +242,8 @@ public class Camera implements Cloneable {
                     // Iterate over each pixel in the image
                     for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone()) {
                         // Construct rays for the current pixel and trace them using the ray tracer
-                        Ray ray = constructRay(nX, nY,pixel.col, pixel.row);
-                        Color pixelColor = rayTracer.traceRay(ray);
+                        List<Ray> rays = constructRays(nX, nY, pixel.col, pixel.row);
+                        Color pixelColor = rayTracer.TraceRays(rays);
                         // Write the pixel color to the image writer
                         imageWriter.writePixel(pixel.col, pixel.row, pixelColor);
                     }
@@ -257,7 +260,7 @@ public class Camera implements Cloneable {
                     // Iterate over each pixel in the image
                     for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone()) {
                         // Apply adaptive super-sampling to determine the pixel color
-                        Color pixelColor = SuperSampling(nX, nY, pixel.col, pixel.row, 0, false);
+                        Color pixelColor = SuperSampling(nX, nY, pixel.col, pixel.row, antiAliasing, false);
                         // Write the pixel color to the image writer
                         imageWriter.writePixel(pixel.col, pixel.row, pixelColor);
                     }
@@ -269,7 +272,29 @@ public class Camera implements Cloneable {
         // Return the camera object
         return this;
     }
+    public List<Ray> constructRays(int nX, int nY, int j, int i) {
+        List<Ray> rays = new LinkedList<>();
+        Point centralPixel = getCenterOfPixel(nX, nY, j, i);
+        double rY = _height / nY / antiAliasing;
+        double rX = _width / nX / antiAliasing;
+        // Variables to store the X and Y offsets of each sub-pixel within the anti-aliasing grid
+        double x, y;
 
+        for (int rowNumber = 0; rowNumber < antiAliasing; rowNumber++) {
+            for (int colNumber = 0; colNumber < antiAliasing; colNumber++) {
+                // Calculate the X and Y offsets for the current sub-pixel
+                y = -(rowNumber - (antiAliasing - 1d) / 2) * rY;
+                x = (colNumber - (antiAliasing - 1d) / 2) * rX;
+                // Calculate the position of the current sub-pixel within the pixel
+                Point pIJ = centralPixel;
+                if (y != 0) pIJ = pIJ.add(up.scale(y));
+                if (x != 0) pIJ = pIJ.add(right.scale(x));
+                // Construct a ray from the camera position to the current sub-pixel
+                rays.add(new Ray(Plocation, pIJ.subtract(Plocation)));
+            }
+        }
+        return rays;
+    }
     /**
      * Checks the color of the pixel with the help of individual rays and averages between them and only
      * if necessary continues to send beams of rays in recursion
@@ -308,7 +333,7 @@ public class Camera implements Cloneable {
     }
 
 
-    /**
+     /**
      * construct ray through a pixel in the view plane
      * nX and nY create the resolution
      * @param nX number of pixels in the width of the view plane
@@ -536,8 +561,8 @@ public class Camera implements Cloneable {
          * set the adaptive
          * @return the Camera object
          */
-        public Builder setadaptive(boolean adaptive) {
-            adaptive = adaptive;
+        public Builder setadaptive(boolean adaptive1) {
+            adaptive = adaptive1;
             return this;
         }
 
@@ -549,6 +574,10 @@ public class Camera implements Cloneable {
             numOfThreads = threadsCount;
             return this;
 
+        }
+        public Builder setAntiAliasing(int nRays){
+            antiAliasing = nRays;
+            return this;
         }
     }
 }

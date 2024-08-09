@@ -16,6 +16,7 @@ public class PointLight extends Light implements LightSource {
     private double kC = 1d; // Constant attenuation factor
     private double kL = 0d; // Linear attenuation factor
     private double kQ = 0d; // Quadratic attenuation factor
+    private double radius = 0d;
 
 
     /**
@@ -27,6 +28,12 @@ public class PointLight extends Light implements LightSource {
     public PointLight(Color intensity, Point position) {
         super(intensity);
         this.position = position;
+    }
+
+    public PointLight(Color intensity, Point position, double radius) {
+        super(intensity);
+        this.position = position;
+        this.radius = radius;
     }
 
     /**
@@ -99,4 +106,55 @@ public class PointLight extends Light implements LightSource {
     public double getDistance(Point p) {
         return position.distance(p);
     }
+
+
+    @Override
+    public List<Vector> getRayBeam(Point p){
+        Vector vec2light = getL(p);
+        if (this.radius == 0)
+            return List.of(vec2light);
+
+        Vector vec1 = vec2light.makePerpendicularVector();
+        Vector vec2 = vec2light.crossProduct(vec1);
+
+        List<Vector> vecs2light = new LinkedList<>();
+
+        for (double i = -10 * radius; i < 10 * radius; i += (10 * radius)/2d){
+            for (double j = -10 * radius; j < 10 * radius; j += (10 * radius)/2d){
+                try {
+                    vecs2light.add(p.subtract(position.add(vec1.scale(i)).add(vec2.scale(j))));
+                }
+                catch (IllegalArgumentException e) {
+                    vecs2light.add(vec2light);
+                }
+            }
+        }
+        return vecs2light;
+    }
+//@Override
+//public List<Vector> getRayBeam(Point p) {
+//    Vector vec2light = getL(p);
+//    if (this.radius == 0) {
+//        return List.of(vec2light);
+//    }
+//
+//    Vector vec1 = vec2light.makePerpendicularVector();
+//    Vector vec2 = vec2light.crossProduct(vec1);
+//
+//    List<Vector> vecs2light = new LinkedList<>();
+//    double step = radius / 5.0; // Adjust step to control the density of rays
+//
+//    for (double i = -radius; i <= radius; i += step) {
+//        for (double j = -radius; j <= radius; j += step) {
+//            try {
+//                Point perturbedPoint = position.add(vec1.scale(i)).add(vec2.scale(j));
+//                Vector perturbedVector = p.subtract(perturbedPoint).normalize();
+//                vecs2light.add(perturbedVector);
+//            } catch (IllegalArgumentException e) {
+//                vecs2light.add(vec2light);
+//            }
+//        }
+//    }
+//    return vecs2light;
 }
+

@@ -146,4 +146,9 @@ public class Vector extends Point {
     public String toString() {
         return "Vector{" + xyz + '}';
     }
+
+    public Vector makePerpendicularVector() {
+        double a = getX(), b = getY(), c = getZ();
+        return (a == b && b == c) ? new Vector(0, -a, a).normalize() : new Vector(b - c, c - a, a - b).normalize();
+    }
 }

@@ -22,7 +22,7 @@ public class ShadowTests {
     */
    private final Camera.Builder camera = Camera.getBuilder()
 
-           .setRayTracer(new SimpleRayTracer(scene).setSoftShadows(false))
+           .setRayTracer(new SimpleRayTracer(scene).setSoftShadows(true))
            .setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
            .setDirection(Point.ZERO, Vector.Y)
            .setVpSize(200, 200);
@@ -133,6 +133,35 @@ public class ShadowTests {
               .renderImage()
               .writeToImage();
    }
+   @Test
+   public void try_shadow() {
+      scene._geometries.add(
+              new Triangle(new Point(-150, -150, -115), new Point(150, -150, -135),
+                      new Point(75, 75, -150)) //
+                      .setMaterial(new Material().setkS(0.8).setnShininess(60)), //
+              new Triangle(new Point(-150, -150, -115), new Point(-70, 70, -140), new Point(75, 75, -150)) //
+                      .setMaterial(new Material().setkS(0.8).setnShininess(60)), //
+              new Sphere(new Point(0, 0, -11), 30d) //
+                      .setEmission(new Color(BLUE)) //
+                      .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(30)) //
+      );
+      scene.setAmbientLight(new AmbientLight(new Color(WHITE), 0.15));
+
+      // Existing light
+      scene.lights.add(
+              new SpotLight(new Color(700, 400, 400), new Point(40, 40, 115), new Vector(-1, -1, -4)) //
+                      .setkL(4E-4).setkQ(2E-5));
+
+      // Additional light to emphasize shadows
+      scene.lights.add(
+              new SpotLight(new Color(500, 300, 300), new Point(-50, -50, 100), new Vector(1, 1, -2),20) //
+                      .setkL(2E-4).setkQ(1E-5));
+
+      camera.setImageWriter(new ImageWriter("try_shadow2", 600, 600))
+              .build()
+              .renderImage()
+              .writeToImage();
+   }
 
    @Test
    public void trianglesSphereSoft() {
@@ -151,7 +180,7 @@ public class ShadowTests {
               new SpotLight(new Color(700, 400, 400), new Point(40, 40, 115), new Vector(-1, -1, -4), 20d) //
                       .setkL(4E-4).setkQ(2E-5));
 
-      camera.setImageWriter(new ImageWriter("shadowTrianglesSpheresoft", 600, 600))
+      camera.setImageWriter(new ImageWriter("soft", 600, 600))
               .build()
               .renderImage()
               .writeToImage();
@@ -174,10 +203,10 @@ public class ShadowTests {
               new SpotLight(new Color(700, 400, 400), new Point(40, 40, 115), new Vector(-1, -1, -4)) //
                       .setkL(4E-4).setkQ(2E-5));
 
-      camera.setImageWriter(new ImageWriter("anti", 600, 600))
-              .setAntiAliasing(200)
+      camera.setImageWriter(new ImageWriter("anti1", 600, 600))
+              .setAntiAliasing(81)
               .build()
-              .renderImagepixel()
+              .renderImage()
               .writeToImage();
 
    }

@@ -119,8 +119,8 @@ public class PointLight extends Light implements LightSource {
 
         List<Vector> vecs2light = new LinkedList<>();
 
-        for (double i = -10 * radius; i < 10 * radius; i += (10 * radius)/2d){
-            for (double j = -10 * radius; j < 10 * radius; j += (10 * radius)/2d){
+        for (double i = -radius; i < radius; i += radius / 10){
+            for (double j = -radius; j < radius; j += radius / 10){
                 try {
                     vecs2light.add(p.subtract(position.add(vec1.scale(i)).add(vec2.scale(j))));
                 }

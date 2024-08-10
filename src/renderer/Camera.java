@@ -11,6 +11,7 @@ import java.util.MissingResourceException;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
+import java.util.stream.*;
 
 /**
  * The Camera class represents a camera in 3D space.
@@ -32,7 +33,15 @@ public class Camera implements Cloneable {
     private static boolean adaptive = false;
     private static int numOfThreads = 1;
     private static int antiAliasing = 1;
-
+    private double printInterval =0;
+    private int threadsCount=0;
+    /** Pixel manager for supporting:
+     * <ul>
+     * <li>multi-threading</li>
+     * <li>debug print of progress percentage in Console window/tab</li>
+     * /ul>
+     */
+     private PixelManager pixelManager;
 
     /**
      * Gets the camera location.
@@ -189,12 +198,33 @@ public class Camera implements Cloneable {
      * @param i the row index of the pixel.
      * @return the color at the intersection point.
      */
-    private Color castRay(int nx, int ny,int j, int i) {
-        Color color= rayTracer.traceRay(constructRay(nx, ny, j, i));
-        imageWriter.writePixel(j, i, color);
-        return color;
+//    private Color castRay(int nx, int ny,int j, int i) {
+//        Color color= rayTracer.traceRay(constructRay(nx, ny, j, i));
+//        imageWriter.writePixel(j, i, color);
+//
+//        return color;
+//    }
+    /** Cast ray from camera and color a pixel
+     * @param nX resolution on X axis (number of pixels in row)
+     * @param nY resolution on Y axis (number of pixels in column)
+     * @param col pixel's column number (pixel index in row)
+     * @param row pixel's row number (pixel index in column)
+     */
+    private void castRay(int nX, int nY, int col, int row) {
+        Color color = Color.BLACK;
+        if (antiAliasing > 1){
+            color = SuperSampling(nX, nY, col, row, antiAliasing, false);
+        }
+        else if (adaptive) {
+            List<Ray> rays = constructRays(nX, nY, col, row);
+            color = rayTracer.TraceRays(rays);
+        }
+        else {
+            color= rayTracer.traceRay(constructRay(nX, nY, col, row));
+        }
+        imageWriter.writePixel(col, row, color);
+        pixelManager.pixelDone();
     }
-
     /**
      * Renders an image by casting rays through all the pixels on the view plane.
      *
@@ -203,75 +233,94 @@ public class Camera implements Cloneable {
     public Camera renderImage() {
         int nx = imageWriter.getNx();
         int ny = imageWriter.getNy();
-        for (int i = 0; i < nx; ++i) {
-            for (int j = 0; j < ny; ++j) {
-                castRay(nx, ny, j, i);
+        pixelManager = new PixelManager(ny, nx, printInterval);
+        if (threadsCount == 0)
+            for (int i = 0; i < ny; ++i)
+                for (int j = 0; j < nx; ++j)
+                    castRay(nx, ny, j, i);
+        else { // see further... option 2
+            var threads = new LinkedList<Thread>(); // list of threads
+            while (threadsCount-- > 0) // add appropriate number of threads
+                threads.add(new Thread(() -> { // add a thread with its code
+                    PixelManager.Pixel pixel; // current pixel(row,col)
+                    // allocate pixel(row,col) in loop until there are no more pixels
+                    while ((pixel = pixelManager.nextPixel()) != null)
+                        // cast ray through pixel (and color it – inside castRay)
+                        castRay(nx, ny, pixel.col(), pixel.row());
+                }));
+            // start all the threads
+            for (var thread : threads) thread.start();
+            // wait until all the threads have finished
+            try {
+                for (var thread : threads) thread.join();
+            } catch (InterruptedException ignore) {
             }
         }
-
-
         return this;
     }
-    /**
-     * Renders the image using the current image writer and ray tracer.
-     * The ray tracer find the color and the image writer colors the pixels
-     *
-     * @return This camera instance.
-     * @throws UnsupportedOperationException If either the image writer or the ray tracer is not initialized.
-     */
-    public Camera renderImagepixel() {
-        // Check if all required camera data is available
-        if (Plocation == null || right == null
-                || up == null || to == null || distance == 0
-                || _width == 0 || _height == 0 || viewPlanePC == null
-                || imageWriter == null || rayTracer == null) {
-            throw new MissingResourceException("Missing camera data", Camera.class.getName(), null);
-        }
-        // Get the number of pixels in X and Y directions from the image writer
-        int nX = imageWriter.getNx();
-        int nY = imageWriter.getNy();
-        // Initialize the Pixel class with the number of rows, columns, and total pixels
-        Pixel.initialize(nY, nX, 1);
 
-        // Check if adaptive mode is enabled
-        if (!adaptive) {
-            // Render the image using regular super-sampling (non-adaptive)
-            // Create multiple threads to process the pixels in parallel
-            while (numOfThreads-- > 0) {
-                new Thread(() -> {
-                    // Iterate over each pixel in the image
-                    for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone()) {
-                        // Construct rays for the current pixel and trace them using the ray tracer
-                        List<Ray> rays = constructRays(nX, nY, pixel.col, pixel.row);
-                        Color pixelColor = rayTracer.TraceRays(rays);
-                        // Write the pixel color to the image writer
-                        imageWriter.writePixel(pixel.col, pixel.row, pixelColor);
-                    }
-                }).start();
-            }
-            // Wait for all the threads to finish processing the pixels
-            Pixel.waitToFinish();
-        }
-        else {
-            // Render the image using adaptive super-sampling
-            // Create multiple threads to process the pixels in parallel
-            while (numOfThreads-- > 0) {
-                new Thread(() -> {
-                    // Iterate over each pixel in the image
-                    for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone()) {
-                        // Apply adaptive super-sampling to determine the pixel color
-                        Color pixelColor = SuperSampling(nX, nY, pixel.col, pixel.row, antiAliasing, false);
-                        // Write the pixel color to the image writer
-                        imageWriter.writePixel(pixel.col, pixel.row, pixelColor);
-                    }
-                }).start();
-            }
-            // Wait for all the threads to finish processing the pixels
-            Pixel.waitToFinish();
-        }
-        // Return the camera object
-        return this;
-    }
+//    /**
+//     * Renders the image using the current image writer and ray tracer.
+//     * The ray tracer find the color and the image writer colors the pixels
+//     *
+//     * @return This camera instance.
+//     * @throws UnsupportedOperationException If either the image writer or the ray tracer is not initialized.
+//     */
+//    public Camera renderImagepixel() {
+//        // Check if all required camera data is available
+//        if (Plocation == null || right == null
+//                || up == null || to == null || distance == 0
+//                || _width == 0 || _height == 0 || viewPlanePC == null
+//                || imageWriter == null || rayTracer == null) {
+//            throw new MissingResourceException("Missing camera data", Camera.class.getName(), null);
+//        }
+//        // Get the number of pixels in X and Y directions from the image writer
+//        int nX = imageWriter.getNx();
+//        int nY = imageWriter.getNy();
+//        // Initialize the Pixel class with the number of rows, columns, and total pixels
+//        Pixel.initialize(nY, nX, 1);
+//
+//        // Check if adaptive mode is enabled
+//        if (!adaptive) {
+//            // Render the image using regular super-sampling (non-adaptive)
+//            // Create multiple threads to process the pixels in parallel
+//            while (numOfThreads-- > 0) {
+//                new Thread(() -> {
+//                    // Iterate over each pixel in the image
+//                    for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone()) {
+//                        // Construct rays for the current pixel and trace them using the ray tracer
+//                        List<Ray> rays = constructRays(nX, nY, pixel.col, pixel.row);
+//                        Color pixelColor = rayTracer.TraceRays(rays);
+//                        // Write the pixel color to the image writer
+//                        imageWriter.writePixel(pixel.col, pixel.row, pixelColor);
+//                    }
+//                }).start();
+//            }
+//            // Wait for all the threads to finish processing the pixels
+//            Pixel.waitToFinish();
+//        }
+//        else {
+//            // Render the image using adaptive super-sampling
+//            // Create multiple threads to process the pixels in parallel
+//            while (numOfThreads-- > 0) {
+//                new Thread(() -> {
+//                    // Iterate over each pixel in the image
+//                    for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone()) {
+//                        // Apply adaptive super-sampling to determine the pixel color
+//                        Color pixelColor = SuperSampling(nX, nY, pixel.col, pixel.row, antiAliasing, false);
+//                        // Write the pixel color to the image writer
+//                        imageWriter.writePixel(pixel.col, pixel.row, pixelColor);
+//                    }
+//                }).start();
+//            }
+//            // Wait for all the threads to finish processing the pixels
+//            Pixel.waitToFinish();
+//        }
+//        // Return the camera object
+//        return this;
+//    }
+
+
     public List<Ray> constructRays(int nX, int nY, int j, int i) {
         List<Ray> rays = new LinkedList<>();
         Point centralPixel = getCenterOfPixel(nX, nY, j, i);
@@ -295,6 +344,8 @@ public class Camera implements Cloneable {
         }
         return rays;
     }
+
+
     /**
      * Checks the color of the pixel with the help of individual rays and averages between them and only
      * if necessary continues to send beams of rays in recursion

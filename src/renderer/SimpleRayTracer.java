@@ -41,7 +41,7 @@ private static final double MIN_CALC_COLOR_K = 0.001;
     private static final double INITIAL_K = 1;
 
 
-    private boolean softShadows = false;
+    private boolean softShadows = true;
 /**
  * Constructor
  *

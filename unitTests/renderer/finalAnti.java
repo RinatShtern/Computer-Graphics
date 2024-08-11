@@ -54,184 +54,142 @@ public class finalAnti {
          }
       }
 
-      // Mountains
+      //--------------mountains--------------------
+      // Only keeping the back mountains
+      double scaleFactor = 2.0;
+      double translateX = -35;
+      double translateY = -35;
+
       // Triangle 1
       scene._geometries.add(new Triangle(
-              new Point(-335, 125, 320),
-              new Point(-355, 225, 0),
-              new Point(-535, 105, 0))
-              .setEmission(new Color(92, 72, 39))
-              .setMaterial(new Material().setkD(0.5).setkS(0.3).setnShininess(150)));
+              new Point(-150 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor),
+              new Point(-160 * scaleFactor + translateX, 130 * scaleFactor + translateY, 0),
+              new Point(-250 * scaleFactor + translateX, 70 * scaleFactor + translateY, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
 
       scene._geometries.add(new Triangle(
-              new Point(-335, 125, 320),
-              new Point(-355, 225, 0),
-              new Point(-95, 85, 0))
-              .setEmission(new Color(92, 72, 39))
-              .setMaterial(new Material().setkD(0.5).setkS(0.3).setnShininess(150)));
+              new Point(-150 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor),
+              new Point(-160 * scaleFactor + translateX, 130 * scaleFactor + translateY, 0),
+              new Point(-30 * scaleFactor + translateX, 60 * scaleFactor + translateY, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
 
       scene._geometries.add(new Triangle(
-              new Point(-335, 125, 320),
-              new Point(-295, 55, 0),
-              new Point(-535, 105, 0))
-              .setEmission(new Color(92, 72, 39))
-              .setMaterial(new Material().setkD(0.5).setkS(0.3).setnShininess(150)));
+              new Point(-150 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor),
+              new Point(-130 * scaleFactor + translateX, 20 * scaleFactor + translateY, 0),
+              new Point(-250 * scaleFactor + translateX, 70 * scaleFactor + translateY, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
 
       scene._geometries.add(new Triangle(
-              new Point(-335, 125, 320),
-              new Point(-295, 55, 0),
-              new Point(-95, 85, 0))
-              .setEmission(new Color(92, 72, 39))
-              .setMaterial(new Material().setkD(0.5).setkS(0.3).setnShininess(150)));
+              new Point(-150 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor),
+              new Point(-130 * scaleFactor + translateX, 20 * scaleFactor + translateY, 0),
+              new Point(-30 * scaleFactor + translateX, 60 * scaleFactor + translateY, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
 
-      // Snow on Triangle 1
+      // Snow 1
       scene._geometries.add(new Triangle(
-              new Point(-298, 146.24, 210),
-              new Point(-407.5, 198, 200),
-              new Point(-335, 125, 320))
-              .setEmission(new Color(250, 245, 245))
-              .setMaterial(new Material().setkD(0.3).setkS(0.6).setnShininess(200).setShininesR(0.4)));
+              new Point(-108 * scaleFactor + translateX, 73.12 * scaleFactor + translateY, 105 * scaleFactor),
+              new Point(-153.75 * scaleFactor + translateX, 99 * scaleFactor + translateY, 100 * scaleFactor),
+              new Point(-150 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
 
       scene._geometries.add(new Triangle(
-              new Point(-298, 146.24, 210),
-              new Point(-285, 114, 200),
-              new Point(-335, 125, 320))
-              .setEmission(new Color(250, 245, 245))
-              .setMaterial(new Material().setkD(0.3).setkS(0.6).setnShininess(200).setShininesR(0.4)));
+              new Point(-108 * scaleFactor + translateX, 73.12 * scaleFactor + translateY, 105 * scaleFactor),
+              new Point(-142.5 * scaleFactor + translateX, 57 * scaleFactor + translateY, 100 * scaleFactor),
+              new Point(-150 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
 
       scene._geometries.add(new Triangle(
-              new Point(-370, 153.12, 210),
-              new Point(-407.5, 198, 200),
-              new Point(-335, 125, 320))
-              .setEmission(new Color(250, 245, 245))
-              .setMaterial(new Material().setkD(0.3).setkS(0.6).setnShininess(200).setShininesR(0.4)));
+              new Point(-185 * scaleFactor + translateX, 76.56 * scaleFactor + translateY, 105 * scaleFactor),
+              new Point(-153.75 * scaleFactor + translateX, 99 * scaleFactor + translateY, 100 * scaleFactor),
+              new Point(-150 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
 
       scene._geometries.add(new Triangle(
-              new Point(-370, 153.12, 210),
-              new Point(-285, 114, 200),
-              new Point(-335, 125, 320))
-              .setEmission(new Color(250, 245, 245))
-              .setMaterial(new Material().setkD(0.3).setkS(0.6).setnShininess(200).setShininesR(0.4)));
+              new Point(-185 * scaleFactor + translateX, 76.56 * scaleFactor + translateY, 105 * scaleFactor),
+              new Point(-142.5 * scaleFactor + translateX, 57 * scaleFactor + translateY, 100 * scaleFactor),
+              new Point(-150 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
 
       // Triangle 2
       scene._geometries.add(new Triangle(
-              new Point(265, 125, 320),
-              new Point(285, 225, 0),
-              new Point(465, 105, 0))
-              .setEmission(new Color(92, 72, 39))
-              .setMaterial(new Material().setkD(0.5).setkS(0.3).setnShininess(150)));
+              new Point(150 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor),
+              new Point(160 * scaleFactor + translateX, 130 * scaleFactor + translateY, 0),
+              new Point(250 * scaleFactor + translateX, 70 * scaleFactor + translateY, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
 
       scene._geometries.add(new Triangle(
-              new Point(265, 125, 320),
-              new Point(285, 225, 0),
-              new Point(45, 85, 0))
-              .setEmission(new Color(92, 72, 39))
-              .setMaterial(new Material().setkD(0.5).setkS(0.3).setnShininess(150)));
+              new Point(150 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor),
+              new Point(160 * scaleFactor + translateX, 130 * scaleFactor + translateY, 0),
+              new Point(30 * scaleFactor + translateX, 60 * scaleFactor + translateY, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
 
       scene._geometries.add(new Triangle(
-              new Point(265, 125, 320),
-              new Point(225, 55, 0),
-              new Point(465, 105, 0))
-              .setEmission(new Color(92, 72, 39))
-              .setMaterial(new Material().setkD(0.5).setkS(0.3).setnShininess(150)));
+              new Point(150 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor),
+              new Point(130 * scaleFactor + translateX, 20 * scaleFactor + translateY, 0),
+              new Point(250 * scaleFactor + translateX, 70 * scaleFactor + translateY, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
 
       scene._geometries.add(new Triangle(
-              new Point(265, 125, 320),
-              new Point(225, 55, 0),
-              new Point(45, 85, 0))
-              .setEmission(new Color(92, 72, 39))
-              .setMaterial(new Material().setkD(0.5).setkS(0.3).setnShininess(150)));
+              new Point(150 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor),
+              new Point(130 * scaleFactor + translateX, 20 * scaleFactor + translateY, 0),
+              new Point(30 * scaleFactor + translateX, 60 * scaleFactor + translateY, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
 
-      // Snow on Triangle 2
+      // Snow 2
       scene._geometries.add(new Triangle(
-              new Point(315, 153.12, 210),
-              new Point(370, 198, 200),
-              new Point(265, 125, 320))
-              .setEmission(new Color(250, 245, 245))
-              .setMaterial(new Material().setkD(0.3).setkS(0.6).setnShininess(200).setShininesR(0.4)));
+              new Point(185 * scaleFactor + translateX, 76.56 * scaleFactor + translateY, 105 * scaleFactor),
+              new Point(153.75 * scaleFactor + translateX, 99 * scaleFactor + translateY, 100 * scaleFactor),
+              new Point(150 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
 
       scene._geometries.add(new Triangle(
-              new Point(315, 153.12, 210),
-              new Point(270, 114, 200),
-              new Point(265, 125, 320))
-              .setEmission(new Color(250, 245, 245))
-              .setMaterial(new Material().setkD(0.3).setkS(0.6).setnShininess(200).setShininesR(0.4)));
+              new Point(185 * scaleFactor + translateX, 76.56 * scaleFactor + translateY, 105 * scaleFactor),
+              new Point(142.5 * scaleFactor + translateX, 57 * scaleFactor + translateY, 100 * scaleFactor),
+              new Point(150 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
 
       scene._geometries.add(new Triangle(
-              new Point(240, 146.24, 210),
-              new Point(270, 198, 200),
-              new Point(265, 125, 320))
-              .setEmission(new Color(250, 245, 245))
-              .setMaterial(new Material().setkD(0.3).setkS(0.6).setnShininess(200).setShininesR(0.4)));
+              new Point(108 * scaleFactor + translateX, 73.12 * scaleFactor + translateY, 105 * scaleFactor),
+              new Point(153.75 * scaleFactor + translateX, 99 * scaleFactor + translateY, 100 * scaleFactor),
+              new Point(150 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
 
       scene._geometries.add(new Triangle(
-              new Point(240, 146.24, 210),
-              new Point(240, 114, 200),
-              new Point(265, 125, 320))
-              .setEmission(new Color(250, 245, 245))
-              .setMaterial(new Material().setkD(0.3).setkS(0.6).setnShininess(200).setShininesR(0.4)));
+              new Point(108 * scaleFactor + translateX, 73.12 * scaleFactor + translateY, 105 * scaleFactor),
+              new Point(142.5 * scaleFactor + translateX, 57 * scaleFactor + translateY, 100 * scaleFactor),
+              new Point(150 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
 
       // Triangle 3
       scene._geometries.add(new Triangle(
-              new Point(-35, 125, 320),
-              new Point(-35, 225, 0),
-              new Point(145, 105, 0))
-              .setEmission(new Color(92, 72, 39))
-              .setMaterial(new Material().setkD(0.5).setkS(0.3).setnShininess(150)));
+              new Point(0 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor),
+              new Point(0 * scaleFactor + translateX, 100 * scaleFactor + translateY, 0),
+              new Point(90 * scaleFactor + translateX, 80 * scaleFactor + translateY, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
 
       scene._geometries.add(new Triangle(
-              new Point(-35, 125, 320),
-              new Point(-35, 225, 0),
-              new Point(-175, 85, 0))
-              .setEmission(new Color(92, 72, 39))
-              .setMaterial(new Material().setkD(0.5).setkS(0.3).setnShininess(150)));
+              new Point(0 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor),
+              new Point(0 * scaleFactor + translateX, 100 * scaleFactor + translateY, 0),
+              new Point(-90 * scaleFactor + translateX, 80 * scaleFactor + translateY, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
 
       scene._geometries.add(new Triangle(
-              new Point(-35, 125, 320),
-              new Point(-35, 55, 0),
-              new Point(145, 105, 0))
-              .setEmission(new Color(92, 72, 39))
-              .setMaterial(new Material().setkD(0.5).setkS(0.3).setnShininess(150)));
+              new Point(0 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor),
+              new Point(0 * scaleFactor + translateX, 50 * scaleFactor + translateY, 0),
+              new Point(90 * scaleFactor + translateX, 80 * scaleFactor + translateY, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
 
       scene._geometries.add(new Triangle(
-              new Point(-35, 125, 320),
-              new Point(-35, 55, 0),
-              new Point(-175, 85, 0))
-              .setEmission(new Color(92, 72, 39))
-              .setMaterial(new Material().setkD(0.5).setkS(0.3).setnShininess(150)));
+              new Point(0 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor),
+              new Point(0 * scaleFactor + translateX, 50 * scaleFactor + translateY, 0),
+              new Point(-90 * scaleFactor + translateX, 80 * scaleFactor + translateY, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
 
-      // Snow on Triangle 3
+      // Snow 3
       scene._geometries.add(new Triangle(
-              new Point(-64, 160, 220),
-              new Point(0, 175, 200),
-              new Point(0, 125, 320))
-              .setEmission(new Color(250, 245, 245))
-              .setMaterial(new Material().setkD(0.3).setkS(0.6).setnShininess(200).setShininesR(0.4)));
+              new Point(-29 * scaleFactor + translateX, 80 * scaleFactor + translateY, 110 * scaleFactor),
+              new Point(0 * scaleFactor + translateX, 88 * scaleFactor + translateY, 100 * scaleFactor),
+              new Point(0 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
 
       scene._geometries.add(new Triangle(
-              new Point(-64, 160, 220),
-              new Point(0, 136, 200),
-              new Point(0, 125, 320))
-              .setEmission(new Color(250, 245, 245))
-              .setMaterial(new Material().setkD(0.3).setkS(0.6).setnShininess(200).setShininesR(0.4)));
+              new Point(-29 * scaleFactor + translateX, 80 * scaleFactor + translateY, 110 * scaleFactor),
+              new Point(0 * scaleFactor + translateX, 68 * scaleFactor + translateY, 100 * scaleFactor),
+              new Point(0 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
 
       scene._geometries.add(new Triangle(
-              new Point(64, 160, 220),
-              new Point(0, 175, 200),
-              new Point(0, 125, 320))
-              .setEmission(new Color(250, 245, 245))
-              .setMaterial(new Material().setkD(0.3).setkS(0.6).setnShininess(200).setShininesR(0.4)));
+              new Point(29 * scaleFactor + translateX, 80 * scaleFactor + translateY, 110 * scaleFactor),
+              new Point(0 * scaleFactor + translateX, 88 * scaleFactor + translateY, 100 * scaleFactor),
+              new Point(0 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
 
       scene._geometries.add(new Triangle(
-              new Point(64, 160, 220),
-              new Point(0, 136, 200),
-              new Point(0, 125, 320))
-              .setEmission(new Color(250, 245, 245))
-              .setMaterial(new Material().setkD(0.3).setkS(0.6).setnShininess(200).setShininesR(0.4)));
+              new Point(29 * scaleFactor + translateX, 80 * scaleFactor + translateY, 110 * scaleFactor),
+              new Point(0 * scaleFactor + translateX, 68 * scaleFactor + translateY, 100 * scaleFactor),
+              new Point(0 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
 
+      //-----------End mountains-----------------
       // Earth
-      scene._geometries.add(new Triangle(new Point(0, 250, 25), new Point(-1200, -90, 0), //
-              new Point(1200, -90, 0)).setEmission(new Color(92, 73, 57)).setMaterial
+      scene._geometries.add(new Triangle(new Point(0, 250, 25), new Point(-1200, -45, 0), //
+              new Point(1200, -45, 0)).setEmission(new Color(92, 73, 57)).setMaterial
               (new Material().setkD(0.5).setkS(0.5).setnShininess(30)));  // Apply base material for the ground
 
       // Sea

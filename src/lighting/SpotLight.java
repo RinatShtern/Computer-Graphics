@@ -22,6 +22,14 @@ public class SpotLight extends PointLight {
         this.direction = direction.normalize();
     }
 
+    /**
+     * Constructs a spotlight with the given intensity, position, direction, and radius.
+     *
+     * @param intensity  the intensity of the light
+     * @param position   the position of the light
+     * @param direction  the direction in which the spotlight emits light
+     * @param radius     the radius of the light source
+     */
     public SpotLight(Color intensity, Point position, Vector direction, double radius) {
         super(intensity, position, radius);
         this.direction = direction.normalize();

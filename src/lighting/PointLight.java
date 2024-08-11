@@ -1,4 +1,4 @@
-package lighting;
+ package lighting;
 
 import primitives.*;
 
@@ -18,7 +18,6 @@ public class PointLight extends Light implements LightSource {
     private double kQ = 0d; // Quadratic attenuation factor
     private double radius = 0d;
 
-
     /**
      * Constructs a point light with the given intensity and position.
      *
@@ -30,6 +29,13 @@ public class PointLight extends Light implements LightSource {
         this.position = position;
     }
 
+    /**
+     * Constructs a point light with the given intensity, position, and radius.
+     *
+     * @param intensity the intensity of the light
+     * @param position the position of the light
+     * @param radius the radius of the light source
+     */
     public PointLight(Color intensity, Point position, double radius) {
         super(intensity);
         this.position = position;
@@ -107,9 +113,14 @@ public class PointLight extends Light implements LightSource {
         return position.distance(p);
     }
 
-
+    /**
+     * Generates a beam of rays from the light source towards a given point.
+     *
+     * @param p the point towards which the beam of rays is generated
+     * @return a list of direction vectors representing the rays in the beam
+     */
     @Override
-    public List<Vector> getRayBeam(Point p){
+    public List<Vector> getRayBeam(Point p) {
         Vector vec2light = getL(p);
         if (this.radius == 0)
             return List.of(vec2light);
@@ -119,42 +130,15 @@ public class PointLight extends Light implements LightSource {
 
         List<Vector> vecs2light = new LinkedList<>();
 
-        for (double i = -radius; i < radius; i += radius / 10){
-            for (double j = -radius; j < radius; j += radius / 10){
+        for (double i = -radius; i < radius; i += radius / 10) {
+            for (double j = -radius; j < radius; j += radius / 10) {
                 try {
                     vecs2light.add(p.subtract(position.add(vec1.scale(i)).add(vec2.scale(j))));
-                }
-                catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException e) {
                     vecs2light.add(vec2light);
                 }
             }
         }
         return vecs2light;
     }
-//@Override
-//public List<Vector> getRayBeam(Point p) {
-//    Vector vec2light = getL(p);
-//    if (this.radius == 0) {
-//        return List.of(vec2light);
-//    }
-//
-//    Vector vec1 = vec2light.makePerpendicularVector();
-//    Vector vec2 = vec2light.crossProduct(vec1);
-//
-//    List<Vector> vecs2light = new LinkedList<>();
-//    double step = radius / 5.0; // Adjust step to control the density of rays
-//
-//    for (double i = -radius; i <= radius; i += step) {
-//        for (double j = -radius; j <= radius; j += step) {
-//            try {
-//                Point perturbedPoint = position.add(vec1.scale(i)).add(vec2.scale(j));
-//                Vector perturbedVector = p.subtract(perturbedPoint).normalize();
-//                vecs2light.add(perturbedVector);
-//            } catch (IllegalArgumentException e) {
-//                vecs2light.add(vec2light);
-//            }
-//        }
-//    }
-//    return vecs2light;
 }
-

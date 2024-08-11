@@ -75,6 +75,7 @@ class PixelManager {
         return null;
     }
 
+
     /** Finish pixel processing by updating and printing of progress percentage */
     void pixelDone() {
         boolean flag       = false;
@@ -91,4 +92,5 @@ class PixelManager {
             if (flag) System.out.printf(PRINT_FORMAT, percentage / 10d);
         }
     }
+
 }

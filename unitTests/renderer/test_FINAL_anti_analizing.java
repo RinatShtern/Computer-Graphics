@@ -1,14 +1,18 @@
 package renderer;
 
+import geometries.Sphere;
+import geometries.Triangle;
+import lighting.AmbientLight;
+import lighting.DirectionalLight;
+import lighting.SpotLight;
 import org.junit.jupiter.api.Test;
-import static java.awt.Color.*;
-
-import lighting.*;
-import geometries.*;
-import primitives.*;
+import primitives.Color;
+import primitives.Material;
+import primitives.Point;
+import primitives.Vector;
 import scene.Scene;
 
-public class test_shadow {
+public class test_FINAL_anti_analizing {
 
    @Test
    public void ourPicture() {
@@ -319,12 +323,14 @@ public class test_shadow {
       scene.lights.add(new DirectionalLight(new Color(150, 150, 255), new Vector(2, -3, -1)));
 
       // spot light
-      scene.lights.add(new SpotLight(new Color(150, 150, 255), new Point(100, 300, 400), new Vector(-1, -2, -1),20)
+      scene.lights.add(new SpotLight(new Color(150, 150, 255), new Point(100, 300, 400), new Vector(-1, -2, -1))
               .setkC(1).setkL(0.0001).setkQ(0.00005));
 
-      ImageWriter imageWriter = new ImageWriter("final_shadow", 600, 600);
+      ImageWriter imageWriter = new ImageWriter("final_soft_shadow", 1200, 1200);
       camera.setRayTracer(new SimpleRayTracer(scene))
               .setImageWriter(imageWriter)
+              .setAntiAliasing(81)
+              .setMultiThreading(4).setadaptive(true)
               .build()
               .renderImage()
               .writeToImage();

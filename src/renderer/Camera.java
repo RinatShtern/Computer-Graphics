@@ -11,7 +11,6 @@ import java.util.MissingResourceException;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
-import java.util.stream.*;
 
 /**
  * The Camera class represents a camera in 3D space.
@@ -19,29 +18,31 @@ import java.util.stream.*;
  */
 public class Camera implements Cloneable {
 
-    private Point Plocation;
-    private Vector right;
-    private Vector up;
-    private Vector to;
-    private double _height = 0;
-    private double _width = 0;
-    private double distance = 0;
-    private Point viewPlanePC;
+    private Point Plocation; // The location of the camera
+    private Vector right; // The right direction vector of the camera
+    private Vector up; // The up direction vector of the camera
+    private Vector to; // The forward direction vector of the camera
+    private double _height = 0; // The height of the view plane
+    private double _width = 0; // The width of the view plane
+    private double distance = 0; // The distance between the camera and the view plane
+    private Point viewPlanePC; // The center point of the view plane
 
-    private ImageWriter imageWriter;
-    private RayTracerBase rayTracer;
-    private static boolean adaptive = false;
-    private static int numOfThreads = 1;
-    private static int antiAliasing = 1;
-    private double printInterval =0;
-    private int threadsCount=0;
-    /** Pixel manager for supporting:
+    private ImageWriter imageWriter; // The object responsible for writing the image
+    private RayTracerBase rayTracer; // The ray tracer used for rendering the image
+    private static boolean adaptive = false; // Flag to enable or disable adaptive super-sampling
+    private static int numOfThreads = 1; // The number of threads to be used for rendering
+    private static int antiAliasing = 1; // The number of rays used for anti-aliasing
+    private double printInterval = 0; // The interval for printing progress
+    private int threadsCount = 0; // The number of threads currently in use
+
+    /**
+     * Pixel manager for supporting:
      * <ul>
      * <li>multi-threading</li>
      * <li>debug print of progress percentage in Console window/tab</li>
-     * /ul>
+     * </ul>
      */
-     private PixelManager pixelManager;
+    private PixelManager pixelManager;
 
     /**
      * Gets the camera location.
@@ -71,9 +72,9 @@ public class Camera implements Cloneable {
     }
 
     /**
-     * Gets the to direction vector of the camera.
+     * Gets the forward direction vector of the camera.
      *
-     * @return the to direction vector.
+     * @return the forward direction vector.
      */
     public Vector getTo() {
         return to;
@@ -110,8 +111,8 @@ public class Camera implements Cloneable {
      * Constructs a Camera object with a given location, up vector, and to vector.
      *
      * @param location the location of the camera.
-     * @param up the up direction vector of the camera.
-     * @param to the to direction vector of the camera.
+     * @param up       the up direction vector of the camera.
+     * @param to       the forward direction vector of the camera.
      */
     public Camera(Point location, Vector up, Vector to) {
         this.Plocation = location;
@@ -144,7 +145,7 @@ public class Camera implements Cloneable {
     /**
      * Sets the view plane size.
      *
-     * @param width the width of the view plane.
+     * @param width  the width of the view plane.
      * @param height the height of the view plane.
      * @return the current Camera object.
      */
@@ -159,29 +160,30 @@ public class Camera implements Cloneable {
      *
      * @param nX the number of columns on the view plane.
      * @param nY the number of rows on the view plane.
-     * @param j the column index of the pixel.
-     * @param i the row index of the pixel.
+     * @param j  the column index of the pixel.
+     * @param i  the row index of the pixel.
      * @return the constructed Ray.
      */
     public Ray constructRay(int nX, int nY, int j, int i) {
-            Point Pc = Plocation.add(to.scale(distance));
-            double Ry = _height / nY;
-            double Rx = _width / nX;
+        Point Pc = Plocation.add(to.scale(distance));
+        double Ry = _height / nY;
+        double Rx = _width / nX;
 
-            double Yi = -1 * (i - (nY - 1) / 2.0) * Ry;
-            double Xj = (j - (nX - 1) / 2.0) * Rx;
+        double Yi = -1 * (i - (nY - 1) / 2.0) * Ry;
+        double Xj = (j - (nX - 1) / 2.0) * Rx;
 
-            Point Pij = Pc;
-            if (!isZero(Xj)) {
-                Pij = Pij.add(right.scale(Xj));
-            }
-
-            if (!isZero(Yi)) {
-                Pij = Pij.add(up.scale(Yi));
-            }
-
-            return new Ray(Plocation, Pij.subtract(Plocation));
+        Point Pij = Pc;
+        if (!isZero(Xj)) {
+            Pij = Pij.add(right.scale(Xj));
         }
+
+        if (!isZero(Yi)) {
+            Pij = Pij.add(up.scale(Yi));
+        }
+
+        return new Ray(Plocation, Pij.subtract(Plocation));
+    }
+
     /**
      * Creates a new Builder instance for constructing a Camera object.
      *
@@ -192,39 +194,27 @@ public class Camera implements Cloneable {
     }
 
     /**
-     * Casts a ray through a specific pixel and traces it to get the color at the intersection point.
+     * Casts a ray from the camera and colors a pixel.
      *
-     * @param j the column index of the pixel.
-     * @param i the row index of the pixel.
-     * @return the color at the intersection point.
-     */
-//    private Color castRay(int nx, int ny,int j, int i) {
-//        Color color= rayTracer.traceRay(constructRay(nx, ny, j, i));
-//        imageWriter.writePixel(j, i, color);
-//
-//        return color;
-//    }
-    /** Cast ray from camera and color a pixel
-     * @param nX resolution on X axis (number of pixels in row)
-     * @param nY resolution on Y axis (number of pixels in column)
-     * @param col pixel's column number (pixel index in row)
-     * @param row pixel's row number (pixel index in column)
+     * @param nX   resolution on X axis (number of pixels in row).
+     * @param nY   resolution on Y axis (number of pixels in column).
+     * @param col  pixel's column number (pixel index in row).
+     * @param row  pixel's row number (pixel index in column).
      */
     private void castRay(int nX, int nY, int col, int row) {
         Color color = Color.BLACK;
-        if (antiAliasing > 1){
+        if (antiAliasing > 1) {
             color = SuperSampling(nX, nY, col, row, antiAliasing, false);
-        }
-        else if (adaptive) {
+        } else if (adaptive) {
             List<Ray> rays = constructRays(nX, nY, col, row);
             color = rayTracer.TraceRays(rays);
-        }
-        else {
-            color= rayTracer.traceRay(constructRay(nX, nY, col, row));
+        } else {
+            color = rayTracer.traceRay(constructRay(nX, nY, col, row));
         }
         imageWriter.writePixel(col, row, color);
         pixelManager.pixelDone();
     }
+
     /**
      * Renders an image by casting rays through all the pixels on the view plane.
      *
@@ -238,19 +228,20 @@ public class Camera implements Cloneable {
             for (int i = 0; i < ny; ++i)
                 for (int j = 0; j < nx; ++j)
                     castRay(nx, ny, j, i);
-        else { // see further... option 2
-            var threads = new LinkedList<Thread>(); // list of threads
-            while (threadsCount-- > 0) // add appropriate number of threads
-                threads.add(new Thread(() -> { // add a thread with its code
-                    PixelManager.Pixel pixel; // current pixel(row,col)
-                    // allocate pixel(row,col) in loop until there are no more pixels
+        else {
+            // Multi-threading option
+            var threads = new LinkedList<Thread>(); // List of threads
+            while (threadsCount-- > 0) // Add appropriate number of threads
+                threads.add(new Thread(() -> {
+                    PixelManager.Pixel pixel; // Current pixel(row, col)
+                    // Allocate pixel(row, col) in loop until there are no more pixels
                     while ((pixel = pixelManager.nextPixel()) != null)
-                        // cast ray through pixel (and color it – inside castRay)
+                        // Cast ray through pixel (and color it – inside castRay)
                         castRay(nx, ny, pixel.col(), pixel.row());
                 }));
-            // start all the threads
+            // Start all the threads
             for (var thread : threads) thread.start();
-            // wait until all the threads have finished
+            // Wait until all the threads have finished
             try {
                 for (var thread : threads) thread.join();
             } catch (InterruptedException ignore) {
@@ -259,73 +250,21 @@ public class Camera implements Cloneable {
         return this;
     }
 
-//    /**
-//     * Renders the image using the current image writer and ray tracer.
-//     * The ray tracer find the color and the image writer colors the pixels
-//     *
-//     * @return This camera instance.
-//     * @throws UnsupportedOperationException If either the image writer or the ray tracer is not initialized.
-//     */
-//    public Camera renderImagepixel() {
-//        // Check if all required camera data is available
-//        if (Plocation == null || right == null
-//                || up == null || to == null || distance == 0
-//                || _width == 0 || _height == 0 || viewPlanePC == null
-//                || imageWriter == null || rayTracer == null) {
-//            throw new MissingResourceException("Missing camera data", Camera.class.getName(), null);
-//        }
-//        // Get the number of pixels in X and Y directions from the image writer
-//        int nX = imageWriter.getNx();
-//        int nY = imageWriter.getNy();
-//        // Initialize the Pixel class with the number of rows, columns, and total pixels
-//        Pixel.initialize(nY, nX, 1);
-//
-//        // Check if adaptive mode is enabled
-//        if (!adaptive) {
-//            // Render the image using regular super-sampling (non-adaptive)
-//            // Create multiple threads to process the pixels in parallel
-//            while (numOfThreads-- > 0) {
-//                new Thread(() -> {
-//                    // Iterate over each pixel in the image
-//                    for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone()) {
-//                        // Construct rays for the current pixel and trace them using the ray tracer
-//                        List<Ray> rays = constructRays(nX, nY, pixel.col, pixel.row);
-//                        Color pixelColor = rayTracer.TraceRays(rays);
-//                        // Write the pixel color to the image writer
-//                        imageWriter.writePixel(pixel.col, pixel.row, pixelColor);
-//                    }
-//                }).start();
-//            }
-//            // Wait for all the threads to finish processing the pixels
-//            Pixel.waitToFinish();
-//        }
-//        else {
-//            // Render the image using adaptive super-sampling
-//            // Create multiple threads to process the pixels in parallel
-//            while (numOfThreads-- > 0) {
-//                new Thread(() -> {
-//                    // Iterate over each pixel in the image
-//                    for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone()) {
-//                        // Apply adaptive super-sampling to determine the pixel color
-//                        Color pixelColor = SuperSampling(nX, nY, pixel.col, pixel.row, antiAliasing, false);
-//                        // Write the pixel color to the image writer
-//                        imageWriter.writePixel(pixel.col, pixel.row, pixelColor);
-//                    }
-//                }).start();
-//            }
-//            // Wait for all the threads to finish processing the pixels
-//            Pixel.waitToFinish();
-//        }
-//        // Return the camera object
-//        return this;
-//    }
-
-
+    /**
+     * Constructs rays through a specific pixel on the view plane for anti-aliasing.
+     *
+     * @param nX the number of columns on the view plane.
+     * @param nY the number of rows on the view plane.
+     * @param j  the column index of the pixel.
+     * @param i  the row index of the pixel.
+     * @return the list of constructed Rays.
+     */
     public List<Ray> constructRays(int nX, int nY, int j, int i) {
         List<Ray> rays = new LinkedList<>();
         Point centralPixel = getCenterOfPixel(nX, nY, j, i);
         double rY = _height / nY / antiAliasing;
         double rX = _width / nX / antiAliasing;
+
         // Variables to store the X and Y offsets of each sub-pixel within the anti-aliasing grid
         double x, y;
 
@@ -334,10 +273,12 @@ public class Camera implements Cloneable {
                 // Calculate the X and Y offsets for the current sub-pixel
                 y = -(rowNumber - (antiAliasing - 1d) / 2) * rY;
                 x = (colNumber - (antiAliasing - 1d) / 2) * rX;
+
                 // Calculate the position of the current sub-pixel within the pixel
                 Point pIJ = centralPixel;
                 if (y != 0) pIJ = pIJ.add(up.scale(y));
                 if (x != 0) pIJ = pIJ.add(right.scale(x));
+
                 // Construct a ray from the camera position to the current sub-pixel
                 rays.add(new Ray(Plocation, pIJ.subtract(Plocation)));
             }
@@ -345,27 +286,28 @@ public class Camera implements Cloneable {
         return rays;
     }
 
-
     /**
-     * Checks the color of the pixel with the help of individual rays and averages between them and only
-     * if necessary continues to send beams of rays in recursion
-     * @param nX amount of pixels by length
-     * @param nY amount of pixels by width
-     * @param j The position of the pixel relative to the y-axis
-     * @param i The position of the pixel relative to the x-axis
-     * @param numOfRays The amount of rays sent
-     * @return Pixel color
+     * Checks the color of the pixel with the help of individual rays, averages between them, and
+     * if necessary, continues to send beams of rays recursively.
+     *
+     * @param nX          the number of pixels by length.
+     * @param nY          the number of pixels by width.
+     * @param j           the position of the pixel relative to the y-axis.
+     * @param i           the position of the pixel relative to the x-axis.
+     * @param numOfRays   the number of rays sent.
+     * @param adaptiveAliasing whether to use adaptive aliasing.
+     * @return the color of the pixel.
      */
-    private Color SuperSampling(int nX, int nY, int j, int i,  int numOfRays, boolean adaptiveAlising)  {
+    private Color SuperSampling(int nX, int nY, int j, int i, int numOfRays, boolean adaptiveAliasing) {
         // Get the right and up vectors of the camera
         Vector Vright = right;
         Vector Vup = up;
         // Get the location of the camera
         Point cameraLoc = this.getLocation();
         // Calculate the number of rays in each row and column
-        int numOfRaysInRowCol = (int)Math.floor(Math.sqrt(numOfRays));
+        int numOfRaysInRowCol = (int) Math.floor(Math.sqrt(numOfRays));
         // If the number of rays is 1, perform regular ray tracing
-        if(numOfRaysInRowCol == 1)
+        if (numOfRaysInRowCol == 1)
             return rayTracer.traceRay(constructRayThroughPixel(nX, nY, j, i));
         // Calculate the center point of the current pixel
         Point pIJ = getCenterOfPixel(nX, nY, j, i);
@@ -374,46 +316,46 @@ public class Camera implements Cloneable {
         double rX = alignZero(_width / nX);
 
         // Calculate the pixel row and column ratios
-        double PRy = rY/numOfRaysInRowCol;
-        double PRx = rX/numOfRaysInRowCol;
+        double PRy = rY / numOfRaysInRowCol;
+        double PRx = rX / numOfRaysInRowCol;
 
-        if (adaptiveAlising)
-            return rayTracer.AdaptiveSuperSamplingRec(pIJ, rX, rY, PRx, PRy,cameraLoc,Vright, Vup,null);
+        if (adaptiveAliasing)
+            return rayTracer.AdaptiveSuperSamplingRec(pIJ, rX, rY, PRx, PRy, cameraLoc, Vright, Vup, null);
         else
-            return rayTracer.RegularSuperSampling(pIJ, rX, rY, PRx, PRy,cameraLoc,Vright, Vup,null);
+            return rayTracer.RegularSuperSampling(pIJ, rX, rY, PRx, PRy, cameraLoc, Vright, Vup, null);
     }
 
-
-     /**
-     * construct ray through a pixel in the view plane
-     * nX and nY create the resolution
-     * @param nX number of pixels in the width of the view plane
-     * @param nY number of pixels in the height of the view plane
-     * @param j  index row in the view plane
-     * @param i  index column in the view plane
-     * @return ray that goes through the pixel (j, i)  Ray(p0, Vi,j)
+    /**
+     * Constructs a ray through a specific pixel in the view plane.
+     * nX and nY create the resolution.
+     *
+     * @param nX the number of pixels in the width of the view plane.
+     * @param nY the number of pixels in the height of the view plane.
+     * @param j  the index row in the view plane.
+     * @param i  the index column in the view plane.
+     * @return the ray that goes through the pixel (j, i).
      */
     public Ray constructRayThroughPixel(int nX, int nY, int j, int i) {
         Point pIJ = getCenterOfPixel(nX, nY, j, i); // center point of the pixel
 
-        //Vi,j = Pi,j - P0, the direction of the ray to the pixel(j, i)
+        // Vi,j = Pi,j - P0, the direction of the ray to the pixel(j, i)
         Vector vIJ = pIJ.subtract(Plocation);
         return new Ray(Plocation, vIJ);
     }
+
     /**
-     * get the center point of the pixel in the view plane
-     * @param nX number of pixels in the width of the view plane
-     * @param nY number of pixels in the height of the view plane
-     * @param j  index row in the view plane
-     * @param i  index column in the view plane
-     * @return the center point of the pixel
+     * Gets the center point of the pixel in the view plane.
+     *
+     * @param nX the number of pixels in the width of the view plane.
+     * @param nY the number of pixels in the height of the view plane.
+     * @param j  the index row in the view plane.
+     * @param i  the index column in the view plane.
+     * @return the center point of the pixel.
      */
     private Point getCenterOfPixel(int nX, int nY, int j, int i) {
         // calculate the ratio of the pixel by the height and by the width of the view plane
-        // the ratio Ry = h/Ny, the height of the pixel
-        double rY = alignZero(_height / nY);
-        // the ratio Rx = w/Nx, the width of the pixel
-        double rX = alignZero(_width / nX);
+        double rY = alignZero(_height / nY); // the ratio Ry = h/Ny, the height of the pixel
+        double rX = alignZero(_width / nX);  // the ratio Rx = w/Nx, the width of the pixel
 
         // Xj = (j - (Nx -1)/2) * Rx
         double xJ = alignZero((j - ((nX - 1d) / 2d)) * rX);
@@ -431,19 +373,16 @@ public class Camera implements Cloneable {
         return pIJ;
     }
 
-
-
     /**
      * Prints a grid on the image.
      *
      * @param interval the interval between grid lines.
-     * @param color the color of the grid lines.
+     * @param color    the color of the grid lines.
      * @return the current Camera object.
      */
     public Camera printGrid(int interval, Color color) {
         for (int i = 0; i < imageWriter.getNx(); i++) {
             for (int j = 0; j < imageWriter.getNy(); j++) {
-                // Write the grid line color to the pixel
                 if (i % interval == 0 || j % interval == 0) {
                     imageWriter.writePixel(i, j, color);
                 }
@@ -464,15 +403,16 @@ public class Camera implements Cloneable {
      */
     public static class Builder {
         private final Camera camera = new Camera();
+
         /**
-         * set Direction for camera with a target point
+         * Sets the direction for the camera with a target point.
          *
-         * @param to target point where the camera is directed to
-         * @param up where is the "up" direction of the camera to
-         * @return the builder itself
+         * @param to  target point where the camera is directed to.
+         * @param up  where the "up" direction of the camera is.
+         * @return the builder itself.
          */
         public Builder setDirection(Point to, Vector up) {
-            //check if vectors are aligned
+            // Check if vectors are aligned
             if (camera.Plocation == null) throw new IllegalArgumentException("Please set the camera location first");
 
             camera.to = to.subtract(camera.Plocation).normalize();
@@ -482,6 +422,7 @@ public class Camera implements Cloneable {
 
             return this;
         }
+
         /**
          * Default constructor for the Builder class.
          */
@@ -505,29 +446,30 @@ public class Camera implements Cloneable {
         /**
          * Sets the direction vectors of the Camera.
          *
-         * @param to the to direction vector.
-         * @param up the up direction vector.
+         * @param to  the forward direction vector.
+         * @param up  the up direction vector.
          * @return the current Builder instance.
          */
         public Builder setDirection(Vector to, Vector up) {
-            if (to == null || up == null && !isZero(to.dotProduct(up))) {
-                throw new IllegalArgumentException("Vectors cannot be null");
+            if (to == null || up == null) {
+                throw new IllegalArgumentException("Direction vectors cannot be null");
             }
             camera.to = to.normalize();
             camera.up = up.normalize();
+            camera.right = camera.to.crossProduct(camera.up).normalize();
             return this;
         }
 
         /**
          * Sets the size of the view plane.
          *
-         * @param width the width of the view plane.
+         * @param width  the width of the view plane.
          * @param height the height of the view plane.
          * @return the current Builder instance.
          */
         public Builder setVpSize(double width, double height) {
             if (width <= 0 || height <= 0) {
-                throw new IllegalArgumentException("Width and height must be positive");
+                throw new IllegalArgumentException("Width and height must be positive numbers");
             }
             camera._width = width;
             camera._height = height;
@@ -542,7 +484,7 @@ public class Camera implements Cloneable {
          */
         public Builder setVpDistance(double distance) {
             if (distance <= 0) {
-                throw new IllegalArgumentException("Distance must be positive");
+                throw new IllegalArgumentException("Distance must be a positive number");
             }
             camera.distance = distance;
             return this;
@@ -557,7 +499,7 @@ public class Camera implements Cloneable {
             if (camera.Plocation == null) {
                 throw new MissingResourceException("Missing rendering data", Camera.class.getName(), "location");
             }
-            if (camera.to == null || camera.up == null ) {
+            if (camera.to == null || camera.up == null) {
                 throw new MissingResourceException("Missing rendering data", Camera.class.getName(), "direction vectors");
             }
             if (camera._width == 0.0) {
@@ -593,6 +535,9 @@ public class Camera implements Cloneable {
          * @return the current Builder instance.
          */
         public Builder setRayTracer(SimpleRayTracer simpleRayTracer) {
+            if (simpleRayTracer == null) {
+                throw new IllegalArgumentException("RayTracer cannot be null");
+            }
             camera.rayTracer = simpleRayTracer;
             return this;
         }
@@ -604,13 +549,18 @@ public class Camera implements Cloneable {
          * @return the current Builder instance.
          */
         public Builder setImageWriter(ImageWriter base_render_test) {
+            if (base_render_test == null) {
+                throw new IllegalArgumentException("ImageWriter cannot be null");
+            }
             camera.imageWriter = base_render_test;
             return this;
         }
 
         /**
-         * set the adaptive
-         * @return the Camera object
+         * Enables or disables adaptive super-sampling.
+         *
+         * @param adaptive1 a boolean flag to enable or disable adaptive super-sampling.
+         * @return the current Builder instance.
          */
         public Builder setadaptive(boolean adaptive1) {
             adaptive = adaptive1;
@@ -618,15 +568,23 @@ public class Camera implements Cloneable {
         }
 
         /**
-         * set the threadsCount
-         * @return the Camera object
+         * Sets the number of threads for multi-threading.
+         *
+         * @param threadsCount the number of threads.
+         * @return the current Builder instance.
          */
         public Builder setMultiThreading(int threadsCount) {
             numOfThreads = threadsCount;
             return this;
-
         }
-        public Builder setAntiAliasing(int nRays){
+
+        /**
+         * Sets the number of rays for anti-aliasing.
+         *
+         * @param nRays the number of rays for anti-aliasing.
+         * @return the current Builder instance.
+         */
+        public Builder setAntiAliasing(int nRays) {
             antiAliasing = nRays;
             return this;
         }

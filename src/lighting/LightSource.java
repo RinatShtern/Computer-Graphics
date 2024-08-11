@@ -11,6 +11,7 @@ import java.util.List;
  * Defines the methods that all light sources must implement.
  */
 public interface LightSource {
+
     /**
      * Gets the intensity of the light at a given point.
      *
@@ -35,5 +36,11 @@ public interface LightSource {
      */
     public double getDistance(Point p);
 
-    List<Vector> getRayBeam(Point p);
+    /**
+     * Generates a beam of rays from the light source towards a given point.
+     *
+     * @param p the point towards which the beam of rays is generated
+     * @return a list of direction vectors representing the rays in the beam
+     */
+    public List<Vector> getRayBeam(Point p);
 }

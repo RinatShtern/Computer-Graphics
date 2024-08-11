@@ -17,8 +17,8 @@ public class test_earth {
    @Test
    public void ourPicture() {
       Scene scene = new Scene("Test scene")
-              .setBackground(new Color(70, 70, 90))  // שינוי צבע הרקע לצבע קריר יותר
-              .setAmbientLight(new AmbientLight(new Color(255, 255, 255), 0.1));  // הוספת תאורה רכה
+              .setBackground(new Color(70, 70, 90))
+              .setAmbientLight(new AmbientLight(new Color(255, 255, 255), 0.1));  
 
       Camera.Builder camera = Camera.getBuilder()
               .setRayTracer(new SimpleRayTracer(scene))
@@ -57,8 +57,7 @@ public class test_earth {
       }
 
       //--------------mountains--------------------
-      // Only keeping the back mountains
-      // Triangle 6
+      // Triangle 1
       scene._geometries.add(new Triangle(new Point(-150, 80, 160), new Point(-160, 130, 0), //
               new Point(-250, 70, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
       scene._geometries.add(new Triangle(new Point(-150, 80, 160), new Point(-160, 130, 0), //
@@ -68,7 +67,7 @@ public class test_earth {
       scene._geometries.add(new Triangle(new Point(-150, 80, 160), new Point(-130, 20, 0), //
               new Point(-30, 60, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
 
-      // Snow 6
+      // Snow 1
       scene._geometries.add(new Triangle(new Point(-108, 73.12, 105), new Point(-153.75, 99, 100), //
               new Point(-150, 80, 160)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
       scene._geometries.add(new Triangle(new Point(-108, 73.12, 105), new Point(-142.5, 57, 100), //
@@ -78,7 +77,7 @@ public class test_earth {
       scene._geometries.add(new Triangle(new Point(-185, 76.56, 105), new Point(-142.5, 57, 100), //
               new Point(-150, 80, 160)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
 
-      // Triangle 9
+      // Triangle 2
       scene._geometries.add(new Triangle(new Point(150, 80, 160), new Point(160, 130, 0), //
               new Point(250, 70, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
       scene._geometries.add(new Triangle(new Point(150, 80, 160), new Point(160, 130, 0), //
@@ -87,7 +86,7 @@ public class test_earth {
               new Point(250, 70, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
       scene._geometries.add(new Triangle(new Point(150, 80, 160), new Point(130, 20, 0), //
               new Point(30, 60, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
-      // Snow 9
+      // Snow 2
       scene._geometries.add(new Triangle(new Point(185, 76.56, 105), new Point(153.75, 99, 100), //
               new Point(150, 80, 160)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
       scene._geometries.add(new Triangle(new Point(185, 76.56, 105), new Point(142.5, 57, 100), //
@@ -97,7 +96,7 @@ public class test_earth {
       scene._geometries.add(new Triangle(new Point(108, 73.12, 105), new Point(142.5, 57, 100), //
               new Point(150, 80, 160)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
 
-      // Triangle 10
+      // Triangle 3
       scene._geometries.add(new Triangle(new Point(0, 80, 160), new Point(0, 100, 0), //
               new Point(90, 80, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
       scene._geometries.add(new Triangle(new Point(0, 80, 160), new Point(0, 100, 0), //
@@ -106,7 +105,7 @@ public class test_earth {
               new Point(90, 80, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
       scene._geometries.add(new Triangle(new Point(0, 80, 160), new Point(0, 50, 0), //
               new Point(-90, 80, 0)).setEmission(new Color(92, 72, 39)).setMaterial(mountainM2));
-      // Snow 10
+      // Snow 3
       scene._geometries.add(new Triangle(new Point(-29, 80, 110), new Point(0, 88, 100), //
               new Point(0, 80, 160)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
       scene._geometries.add(new Triangle(new Point(-29, 80, 110), new Point(0, 68, 100), //

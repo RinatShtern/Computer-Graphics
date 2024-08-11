@@ -62,6 +62,27 @@ public class ReflectionRefractionTests {
               .renderImage()
               .writeToImage();
    }
+   @Test
+   public void twoSpheres_AFTERCHANGE() {
+      scene._geometries.add(
+              new Sphere(new Point(0, 0, -50), 50d).setEmission(new Color(BLUE))
+                      .setMaterial(new Material().setkD(0.4).setkS(0.3).setnShininess(100).setkT(0.3)),
+              new Sphere(new Point(0, 0, -50), 25d).setEmission(new Color(RED))
+                      .setMaterial(new Material().setkD(0.5).setkS(0.5).setnShininess(100)));
+      scene.lights.add(
+              new SpotLight(new Color(1000, 600, 0), new Point(-100, -100, 500), new Vector(-1, -1, -2),20)
+                      .setkL(0.0004).setkQ(0.0000006));
+
+      cameraBuilder.setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
+              .setVpSize(150, 150)
+              .setImageWriter(new ImageWriter("refractionTwoSpheres3", 500, 500))
+              .setMultiThreading(4).setadaptive(true)
+              .build()
+              .renderImage()
+              .writeToImage();
+   }
+
+
    /**
     * Produce a picture of a sphere lighted by a spotlight
     */

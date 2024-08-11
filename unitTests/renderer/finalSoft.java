@@ -310,6 +310,7 @@ public class finalSoft {
       ImageWriter imageWriter = new ImageWriter("finalSoft", 1000, 1000);
       camera.setRayTracer(new SimpleRayTracer(scene))
               .setImageWriter(imageWriter)
+              .setMultiThreading(3).setadaptive(true)
               .build()
               .renderImage()
               .writeToImage();

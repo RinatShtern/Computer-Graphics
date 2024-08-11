@@ -12,7 +12,7 @@ import primitives.Point;
 import primitives.Vector;
 import scene.Scene;
 
-public class finalSoftMultiAdaptive {
+public class finalSoftMultiAdaptiveAnti_analizing {
 
    @Test
    public void ourPicture() {
@@ -200,7 +200,7 @@ public class finalSoftMultiAdaptive {
       scene._geometries.add(new Triangle(new Point(10000, 10000, 0), new Point(-10000, 10000, 0), //
               new Point(0, 10000, 100000)).setEmission(new Color(191, 41, 99)));
 
-      // Clouds
+//      // Clouds
       Color cloudColor = new Color(169, 169, 169);  // Change cloud color to a darker gray
 
       scene._geometries.add(new Sphere(new Point(365, 165, 415), 60d).setEmission(cloudColor).setMaterial(cloudM));
@@ -307,7 +307,7 @@ public class finalSoftMultiAdaptive {
 
       scene.lights.add(new DirectionalLight(new Color(150, 150, 255), new Vector(2, -3, -1)));
 
-      ImageWriter imageWriter = new ImageWriter("finalSoftMultiAdaptive", 1000, 1000);
+      ImageWriter imageWriter = new ImageWriter("finalSoftMultiAdaptiveAnti", 1000, 1000);
       camera.setRayTracer(new SimpleRayTracer(scene))
               .setMultiThreading(3).setadaptive(true)
               .setImageWriter(imageWriter)

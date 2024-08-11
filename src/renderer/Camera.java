@@ -299,32 +299,46 @@ public class Camera implements Cloneable {
      * @return the color of the pixel.
      */
     private Color SuperSampling(int nX, int nY, int j, int i, int numOfRays, boolean adaptiveAliasing) {
-        // Get the right and up vectors of the camera
+        // קבלת הוקטורים ימינה ולמעלה של המצלמה
         Vector Vright = right;
         Vector Vup = up;
-        // Get the location of the camera
+
+        // קבלת המיקום של המצלמה
         Point cameraLoc = this.getLocation();
-        // Calculate the number of rays in each row and column
+
+        // nX: מספר העמודות בפיקסלים בתמונה (רזולוציה בכיוון האופקי)
+        // nY: מספר השורות בפיקסלים בתמונה (רזולוציה בכיוון האנכי)
+        // j: אינדקס העמודה של הפיקסל הנוכחי שבו דוגמים
+        // i: אינדקס השורה של הפיקסל הנוכחי שבו דוגמים
+        // numOfRays: מספר הקרניים שנשלחות לכל פיקסל לצורך דגימה
+        // adaptiveAliasing: משתנה בוליאני שמצביע האם לבצע סופר-סמפולינג אדפטיבי או רגיל
+
+        // חישוב מספר הקרניים בכל שורה ועמודה בתוך הפיקסל
         int numOfRaysInRowCol = (int) Math.floor(Math.sqrt(numOfRays));
-        // If the number of rays is 1, perform regular ray tracing
+
+        // אם מספר הקרניים הוא 1, מבצעים דגימה רגילה (ללא סופר-סמפולינג)
         if (numOfRaysInRowCol == 1)
             return rayTracer.traceRay(constructRayThroughPixel(nX, nY, j, i));
-        // Calculate the center point of the current pixel
+
+        // חישוב נקודת המרכז של הפיקסל הנוכחי
         Point pIJ = getCenterOfPixel(nX, nY, j, i);
-        // Calculate the height and width ratios of the pixel
+
+        // חישוב יחס הגובה של הפיקסל (rY)
         double rY = alignZero(_height / nY);
+        // חישוב יחס הרוחב של הפיקסל (rX)
         double rX = alignZero(_width / nX);
 
-        // Calculate the pixel row and column ratios
+        // חישוב יחס הגובה והרוחב של תת-הפיקסלים בתוך הפיקסל
         double PRy = rY / numOfRaysInRowCol;
         double PRx = rX / numOfRaysInRowCol;
 
+        // אם בוצע סופר-סמפולינג אדפטיבי, מפעילים את הפונקציה המתאימה לכך
         if (adaptiveAliasing)
             return rayTracer.AdaptiveSuperSamplingRec(pIJ, rX, rY, PRx, PRy, cameraLoc, Vright, Vup, null);
         else
+            // אחרת, מבצעים סופר-סמפולינג רגיל
             return rayTracer.RegularSuperSampling(pIJ, rX, rY, PRx, PRy, cameraLoc, Vright, Vup, null);
     }
-
     /**
      * Constructs a ray through a specific pixel in the view plane.
      * nX and nY create the resolution.
@@ -589,4 +603,5 @@ public class Camera implements Cloneable {
             return this;
         }
     }
+
 }

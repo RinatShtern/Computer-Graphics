@@ -12,7 +12,7 @@ import primitives.Point;
 import primitives.Vector;
 import scene.Scene;
 
-public class finalAnti {
+public class finalAdaptive {
 
    @Test
    public void ourPicture() {
@@ -288,6 +288,7 @@ public class finalAnti {
                  .setMaterial(new Material().setkD(0.7).setkS(0.3).setnShininess(200)));
       }
 
+
       // Light sources
       scene.lights.add(new SpotLight(new Color(255, 255, 200),
               new Point(-150, 200, 400),
@@ -308,9 +309,9 @@ public class finalAnti {
 
       scene.lights.add(new DirectionalLight(new Color(150, 150, 255), new Vector(2, -3, -1)));
 
-      ImageWriter imageWriter = new ImageWriter("finalAnti", 1000, 1000);
+      ImageWriter imageWriter = new ImageWriter("finalAdaptive", 1000, 1000);
       camera.setRayTracer(new SimpleRayTracer(scene))
-              .setAntiAliasing(81)
+              .setadaptive(true)
               .setImageWriter(imageWriter)
               .build()
               .renderImage()

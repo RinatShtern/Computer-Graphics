@@ -53,7 +53,8 @@ public class finalAntiMultiAdaptive {
                     .setMaterial(new Material().setkD(0.2).setkS(0.8).setnShininess(100).setkT(0.3)));
          }
       }
-      //--------------mountains--------------------
+
+//--------------mountains--------------------
       // Only keeping the back mountains
       double scaleFactor = 2.0;
       double translateX = -35;
@@ -186,6 +187,7 @@ public class finalAntiMultiAdaptive {
               new Point(0 * scaleFactor + translateX, 80 * scaleFactor + translateY, 160 * scaleFactor)).setEmission(new Color(250, 245, 245)).setMaterial(snowM));
 
       //-----------End mountains-----------------
+
       // Earth
       scene._geometries.add(new Triangle(new Point(0, 250, 25), new Point(-1200, -45, 0), //
               new Point(1200, -45, 0)).setEmission(new Color(92, 73, 57)).setMaterial

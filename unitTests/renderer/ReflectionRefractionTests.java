@@ -57,7 +57,6 @@ public class ReflectionRefractionTests {
       cameraBuilder.setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
               .setVpSize(150, 150)
               .setImageWriter(new ImageWriter("refractionTwoSpheres2", 500, 500))
-              .setMultiThreading(4).setadaptive(true)
               .build()
               .renderImage()
               .writeToImage();

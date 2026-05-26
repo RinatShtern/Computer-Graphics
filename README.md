@@ -7,7 +7,7 @@ A comprehensive 3D virtual graphical scene simulation engine built from scratch 
 ## 🌄 Final Rendered Scene
 *Below is the visual output of the rendered 3D environment, featuring complex geometric shapes, reflective water surfaces, and realistic atmospheric lighting.*
 
-![Final Rendered Scene](images/final_scene.png)
+![Final Rendered Scene]([https://github.com/RinatShtern/Computer-Graphics/blob/master/images/final.png])
 
 ## 🚀 Core Features
 
